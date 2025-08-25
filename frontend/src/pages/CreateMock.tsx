@@ -16,6 +16,8 @@ import type React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import CreateServer from "../wailsjs/go/main/App";
+
 interface MockFormData {
   name: string;
   description: string;
@@ -45,6 +47,7 @@ const CreateMock: React.FC = () => {
 
   const onSubmit = (data: MockFormData) => {
     console.log("Mock data:", data);
+    CreateServer(data);
     toast("Mock created successfully!");
   };
 
