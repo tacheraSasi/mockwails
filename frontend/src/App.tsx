@@ -27,34 +27,51 @@ function App() {
 
   return (
     <Layout>
-      <div id="App">
+      <div id="App" className="w-full max-w-xl">
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
           <Toaster />
-          <div className="flex align-center justify-center mt-2">
-            <Card className="p-4">
-              <div className="flex align-end justify-end">
-                <ModeToggle />
+          <div className="mb-10 text-center">
+            <h1 className="text-3xl font-extrabold tracking-tight mb-2 text-blue-700 dark:text-blue-400">
+              Welcome to mockWAILS
+            </h1>
+            <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">
+              A simple, beautiful mock server creator for rapid API prototyping.
+            </p>
+          </div>
+          <Card className="p-8 shadow-xl border border-blue-100 dark:border-blue-900 bg-white/80 dark:bg-gray-900/80">
+            <div className="flex flex-col items-center mb-8">
+              <AspectRatio ratio={16 / 9} className="w-32 mb-4">
+                <img src={Logo} alt="Logo" className="rounded shadow" />
+              </AspectRatio>
+              <div className="text-xl font-semibold text-center mb-2">
+                Create a Mock Endpoint
               </div>
-              <div className="flex align-center justify-center mb-12">
-                <AspectRatio ratio={16 / 9}>
-                  <img src={Logo} alt="Logo" />
-                </AspectRatio>
+              <div className="text-sm text-gray-500 dark:text-gray-400 mb-4 text-center max-w-xs">
+                Enter a name to get started. More options coming soon!
               </div>
-              <div className="text-md font-bold text-center">{resultText}</div>
+            </div>
+            <div className="flex flex-col gap-4 items-center">
               <Input
                 id="name"
                 onChange={updateName}
                 autoComplete="off"
                 name="input"
                 type="text"
-                placeholder="Enter your name"
-                className="w-[20rem]"
+                placeholder="Enter mock name"
+                className="w-full max-w-md"
               />
-              <Button variant="outline" onClick={greet}>
-                Greet
+              <Button
+                variant="outline"
+                onClick={greet}
+                className="w-full max-w-md"
+              >
+                Create Mock
               </Button>
-            </Card>
-          </div>
+              <div className="text-md font-bold text-center mt-4 text-blue-700 dark:text-blue-400">
+                {resultText}
+              </div>
+            </div>
+          </Card>
         </ThemeProvider>
       </div>
     </Layout>
