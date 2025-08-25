@@ -9,3 +9,7 @@ type Server struct {
 	ResponseStructure string `orm:"type:text;notnull" validate:"required"`
 	RequestStructure string `orm:"type:text;notnull" validate:"required"`
 }
+
+func (Server) TableName() string {
+	return "servers"
+}
