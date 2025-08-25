@@ -31,9 +31,9 @@ func main() {
 		},
 		Mac: &mac.Options{
 			About: &mac.AboutInfo{
-				Title: "WailsTerm",
+				Title: "MockWails",
 				Message: strings.Join([]string{
-					"© 2024 Lane Shukhov",
+					"© 2025 Tachera Sasi",
 				}, "\n"),
 			},
 		},
