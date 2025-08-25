@@ -1,19 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { Home, Settings, User, Server } from "lucide-react";
+import React from "react";
+import { Home, Settings, User, Server, List } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle";
 import Logo from "../assets/images/logo-universal.png";
 
 const Sidebar: React.FC = () => {
-  const [darkMode, setDarkMode] = useState(false);
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [darkMode]);
-
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
@@ -35,19 +25,13 @@ const Sidebar: React.FC = () => {
             href="#"
             className="flex items-center gap-3 p-2 rounded-lg font-medium hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors"
           >
-            <Home size={20} /> Dashboard
-          </a>
-          <a
-            href="#"
-            className="flex items-center gap-3 p-2 rounded-lg font-medium hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors"
-          >
             <Server size={20} /> Create Mock
           </a>
           <a
             href="#"
             className="flex items-center gap-3 p-2 rounded-lg font-medium hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors"
           >
-            <User size={20} /> Mocks List
+            <List size={20} /> Mocks List
           </a>
           <a
             href="#"
