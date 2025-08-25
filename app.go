@@ -7,7 +7,6 @@ import (
 	"log"
 )
 
-// App struct
 type App struct {
 	ctx context.Context
 }
