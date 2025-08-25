@@ -27,12 +27,12 @@ function App() {
       <div id="App" className="w-full max-w-xl">
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
           <Toaster />
-          <Card className="p-8 shadow-xl border border-[#EEE6CA] dark:border-[#EEE6CA]/30 bg-white/80 dark:bg-gray-900/80">
+          <Card className="p-8 shadow-xl border border-black dark:border-black/30 bg-white/80 dark:bg-neutral-900/80">
             <div className="flex flex-col items-center mb-8">
-              <div className="text-xl font-semibold text-center mb-2 text-[#EEE6CA]">
+              <div className="text-xl font-semibold text-center mb-2 text-black">
                 Create a Mock Endpoint
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400 mb-4 text-center max-w-xs">
+              <div className="text-sm text-neutral-500 dark:text-neutral-400 mb-4 text-center max-w-xs">
                 Enter a name to get started. More options coming soon!
               </div>
             </div>
@@ -49,7 +49,7 @@ function App() {
               <Button
                 variant="outline"
                 onClick={greet}
-                className="w-full max-w-md border-[#EEE6CA] text-[#EEE6CA] hover:bg-[#EEE6CA]/30"
+                className="w-full max-w-md border-black text-black hover:bg-black/30"
               >
                 Create Mock
               </Button>
