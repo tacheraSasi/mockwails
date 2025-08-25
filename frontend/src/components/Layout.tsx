@@ -1,5 +1,5 @@
 import Sidebar from "@/components/sidebar";
-import React from "react";
+import type React from "react";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -7,11 +7,9 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-blue-50 via-white to-neutral-100 dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-950">
+    <div className="flex min-h-screen bg-neutral-50 dark:bg-neutral-950">
       <Sidebar />
-      <main className="flex-1 flex flex-col items-center justify-center p-8">
-        {children}
-      </main>
+      <main className="flex-1 overflow-y-auto">{children}</main>
     </div>
   );
 };
