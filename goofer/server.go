@@ -1,13 +1,16 @@
 package goofer
 
 type Server struct {
-	ID   uint   `orm:"primaryKey;autoIncrement" validate:"required"`
-	Name string `orm:"type:varchar(255);notnull" validate:"required"`
-	Host string `orm:"type:varchar(255);notnull" validate:"required"`
-	Port uint   `orm:"type:int;notnull" validate:"required"`
-	RequestCount uint `orm:"type:int;default:0;notnull" validate:"required"`
-	ResponseStructure string `orm:"type:text;notnull" validate:"required"`
-	RequestStructure string `orm:"type:text;notnull" validate:"required"`
+	ID              uint   `orm:"primaryKey;autoIncrement" validate:"required"`
+	Name            string `orm:"type:varchar(255);notnull" validate:"required"`
+	Description     string `orm:"type:text;notnull" validate:"required"`
+	Endpoint        string `orm:"type:varchar(255);notnull" validate:"required"`
+	Method          string `orm:"type:varchar(10);notnull" validate:"required"`
+	RequestHeaders  string `orm:"type:text;notnull" validate:"required"`
+	RequestBody     string `orm:"type:text;notnull" validate:"required"`
+	ResponseStatus  int    `orm:"type:int;notnull" validate:"required"`
+	ResponseHeaders string `orm:"type:text;notnull" validate:"required"`
+	ResponseBody    string `orm:"type:text;notnull" validate:"required"`
 }
 
 func (Server) TableName() string {

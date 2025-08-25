@@ -15,8 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import type React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-
-import CreateServer from "../wailsjs/go/main/App";
+import { CreateServer } from "../../wailsjs/go/main/App";
 
 interface MockFormData {
   name: string;
