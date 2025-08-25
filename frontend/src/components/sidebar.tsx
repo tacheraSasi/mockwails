@@ -14,7 +14,7 @@ const Sidebar: React.FC = () => {
   ];
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen fixed">
       {/* Sidebar */}
       <aside className="w-64 bg-background text-foreground shadow-xl flex flex-col border-r border-border">
         {/* Logo & App Name */}
