@@ -37,6 +37,8 @@ func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
 }
 
-func (a *App) CreateServer(data interface{}){
-	fmt.Println(data,"CreateServer called")
+func (a *App) CreateServer(data any){
+	server := data.(Server)
+	fmt.Println(server,"CreateServer called")
+	fmt.Println("SERVER NAME,",server.Name)
 }
