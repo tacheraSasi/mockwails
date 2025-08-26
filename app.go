@@ -53,7 +53,7 @@ func (a *App) CreateServer(data map[string]interface{}) {
 		log.Println("Failed to unmarshal server data:", err)
 		return
 	}
-	err = goofer.CreateServer(goofer.Server{
+	err = goofer.CreateServer(goofer.ServerSchema{
 		ID:              server.ID,
 		Name:            server.Name,
 		Description:     server.Description,
@@ -81,7 +81,7 @@ func (a *App) GetAllServers() ([]Server, error) {
 		log.Println("Failed to get servers:", err)
 		return nil, err
 	}
-	// Convert goofer.Server to main.Server if needed (fields are the same)
+	// NOTE: I Convert goofer.Server to main.Server if needed (fields are the same)
 	var result []Server
 	for _, s := range servers {
 		result = append(result, Server(s))
@@ -101,7 +101,7 @@ func (a *App) UpdateServer(data map[string]interface{}) {
 		log.Println("Failed to unmarshal server data:", err)
 		return
 	}
-	err = goofer.UpdateServer(goofer.Server(server))
+	err = goofer.UpdateServer(goofer.ServerSchema(server))
 	if err != nil {
 		log.Println("Failed to update server:", err)
 		return
@@ -118,4 +118,3 @@ func (a *App) DeleteServer(id uint) {
 	}
 	log.Println("DeleteServer called for ID:", id)
 }
-

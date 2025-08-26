@@ -10,7 +10,7 @@ func TestServerCRUD(t *testing.T) {
 	os.Remove(DB_PATH)
 	defer os.Remove(DB_PATH)
 
-	server := Server{
+	server := ServerSchema{
 		Name:            "TestServer",
 		Description:     "A test server",
 		Endpoint:        "/api/test",

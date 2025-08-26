@@ -40,23 +40,23 @@ func GetClient(models ...schema.Entity) DBClient {
 	return DBClient{Client: gooferClient, DB: db}
 }
 
-func CreateServer(server Server) error {
-	dbclient := GetClient(&Server{})
+func CreateServer(server ServerSchema) error {
+	dbclient := GetClient(&ServerSchema{})
 	if dbclient.Err != nil {
 		return dbclient.Err
 	}
 	defer dbclient.DB.Close()
-	serverRepo := engine.Repo[Server](dbclient.Client)
+	serverRepo := engine.Repo[ServerSchema](dbclient.Client)
 	return serverRepo.Save(&server)
 }
 
-func GetAllServers() ([]Server, error) {
-	dbclient := GetClient(&Server{})
+func GetAllServers() ([]ServerSchema, error) {
+	dbclient := GetClient(&ServerSchema{})
 	if dbclient.Err != nil {
 		return nil, dbclient.Err
 	}
 	defer dbclient.DB.Close()
-	serverRepo := engine.Repo[Server](dbclient.Client)
+	serverRepo := engine.Repo[ServerSchema](dbclient.Client)
 	servers, err := serverRepo.Find().All()
 	if err != nil {
 		return nil, err
@@ -64,22 +64,22 @@ func GetAllServers() ([]Server, error) {
 	return servers, nil
 }
 
-func UpdateServer(server Server) error {
-	dbclient := GetClient(&Server{})
+func UpdateServer(server ServerSchema) error {
+	dbclient := GetClient(&ServerSchema{})
 	if dbclient.Err != nil {
 		return dbclient.Err
 	}
 	defer dbclient.DB.Close()
-	serverRepo := engine.Repo[Server](dbclient.Client)
+	serverRepo := engine.Repo[ServerSchema](dbclient.Client)
 	return serverRepo.Save(&server)
 }
 
 func DeleteServer(ID uint) error {
-	dbclient := GetClient(&Server{})
+	dbclient := GetClient(&ServerSchema{})
 	if dbclient.Err != nil {
 		return dbclient.Err
 	}
 	defer dbclient.DB.Close()
-	serverRepo := engine.Repo[Server](dbclient.Client)
+	serverRepo := engine.Repo[ServerSchema](dbclient.Client)
 	return serverRepo.DeleteByID(ID)
 }
