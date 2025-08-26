@@ -4,6 +4,7 @@ import (
 	"embed"
 	"strings"
 
+	"github.com/tacheraSasi/mockwails/db"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
@@ -14,12 +15,13 @@ import (
 var assets embed.FS
 
 func main() {
+	db.AutoMigrate()
 	app := NewApp()
 
 	err := wails.Run(&options.App{
-		Title:  "MockWails",
-		Width:  950,
-		Height: 700,
+		Title:         "MockWails",
+		Width:         950,
+		Height:        700,
 		DisableResize: false,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
