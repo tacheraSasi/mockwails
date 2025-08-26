@@ -1,4 +1,4 @@
-module win-n8n
+module github.com/tacheraSasi/mockwails
 
 go 1.24
 

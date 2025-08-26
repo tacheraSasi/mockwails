@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+
+	"github.com/tacheraSasi/mockwails/goofer"
 )
 
 type App struct {
@@ -40,16 +42,17 @@ func (a *App) Greet(name string) string {
 }
 
 func (a *App) CreateServer(data map[string]interface{}) {
-    var server Server
-    b, err := json.Marshal(data)
-    if err != nil {
-        log.Println("Failed to marshal data:", err)
-        return
-    }
-    if err := json.Unmarshal(b, &server); err != nil {
-        log.Println("Failed to unmarshal server data:", err)
-        return
-    }
-    log.Println("CreateServer called with server:", server)
-    log.Println("SERVER NAME:", server.Name)
+	var server Server
+	b, err := json.Marshal(data)
+	if err != nil {
+		log.Println("Failed to marshal data:", err)
+		return
+	}
+	if err := json.Unmarshal(b, &server); err != nil {
+		log.Println("Failed to unmarshal server data:", err)
+		return
+	}
+	err = goofer.CreateServer(*server)
+	log.Println("CreateServer called with server:", server)
+	log.Println("SERVER NAME:", server.Name)
 }
