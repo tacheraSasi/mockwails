@@ -8,40 +8,6 @@ import { GetAllServers } from "wailsjs/go/main/App";
 import { main } from "wailsjs/go/models";
 
 
-// Mock data for demonstration
-const mockEndpoints: MockEndpoint[] = [
-  {
-    id: "1",
-    name: "User API Mock",
-    description: "Mock endpoint for user management operations",
-    endpoint: "/api/users",
-    method: "GET",
-    status: "active",
-    responseStatus: 200,
-    createdAt: "2024-01-15",
-  },
-  {
-    id: "2",
-    name: "Product Catalog",
-    description: "Returns a list of products with pagination",
-    endpoint: "/api/products",
-    method: "GET",
-    status: "inactive",
-    responseStatus: 200,
-    createdAt: "2024-01-14",
-  },
-  {
-    id: "3",
-    name: "Authentication Mock",
-    description: "Mock login endpoint for testing authentication",
-    endpoint: "/api/auth/login",
-    method: "POST",
-    status: "active",
-    responseStatus: 200,
-    createdAt: "2024-01-13",
-  },
-];
-
 const ListMock: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [endpoints, setEndpoints] = useState<main.Server[]>(mockEndpoints);
@@ -158,7 +124,7 @@ const ListMock: React.FC = () => {
                     </span>
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        endpoint.status === "active"
+                        endpoint. === "active"
                           ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
                           : "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
                       }`}

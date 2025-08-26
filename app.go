@@ -23,6 +23,7 @@ type Server struct {
 	ResponseStatus  int    `json:"responseStatus"`
 	ResponseHeaders string `json:"responseHeaders"`
 	ResponseBody    string `json:"responseBody"`
+	goofer.ServerEntity  //TODO: Lookup a better way to handle this
 }
 
 // NewApp creates a new App application struct
@@ -84,7 +85,19 @@ func (a *App) GetAllServers() ([]Server, error) {
 	// NOTE: I Convert goofer.Server to main.Server if needed (fields are the same)
 	var result []Server
 	for _, s := range servers {
-		result = append(result, Server(s))
+		result = append(result, Server{
+			ID:              s.ID,
+			Name:            s.Name,
+			Description:     s.Description,
+			Endpoint:        s.Endpoint,
+			Method:          s.Method,
+			RequestHeaders:  s.RequestHeaders,
+			RequestBody:     s.RequestBody,
+			ResponseStatus:  s.ResponseStatus,
+			ResponseHeaders: s.ResponseHeaders,
+			ResponseBody:    s.ResponseBody,
+			ServerEntity:    s,
+		})
 	}
 	return result, nil
 }
@@ -101,7 +114,18 @@ func (a *App) UpdateServer(data map[string]interface{}) {
 		log.Println("Failed to unmarshal server data:", err)
 		return
 	}
-	err = goofer.UpdateServer(goofer.ServerEntity(server))
+	err = goofer.UpdateServer(goofer.ServerEntity{
+		ID:              server.ID,
+		Name:            server.Name,
+		Description:     server.Description,
+		Endpoint:        server.Endpoint,
+		Method:          server.Method,
+		RequestHeaders:  server.RequestHeaders,
+		RequestBody:     server.RequestBody,
+		ResponseStatus:  server.ResponseStatus,
+		ResponseHeaders: server.ResponseHeaders,
+		ResponseBody:    server.ResponseBody,
+	})
 	if err != nil {
 		log.Println("Failed to update server:", err)
 		return

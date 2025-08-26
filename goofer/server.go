@@ -1,5 +1,7 @@
 package goofer
 
+import "time"
+
 type ServerEntity struct {
 	ID              uint   `orm:"primaryKey;autoIncrement" validate:"required"`
 	Name            string `orm:"type:varchar(255);notnull" validate:"required"`
@@ -11,7 +13,9 @@ type ServerEntity struct {
 	ResponseStatus  int    `orm:"type:int;notnull" validate:"required"`
 	ResponseHeaders string `orm:"type:text;notnull" validate:"required"`
 	ResponseBody    string `orm:"type:text;notnull" validate:"required"`
-	// Status          string `orm:"type:varchar(10);default:'inactive'"`
+	Status          string `orm:"type:varchar(10);default:'inactive'"`
+	CreatedAt      time.Time `orm:"type:timestamp;default:CURRENT_TIMESTAMP"`
+	UpdatedAt      time.Time `orm:"type:timestamp;default:CURRENT_TIMESTAMP"`
 }
 
 func (ServerEntity) TableName() string {
