@@ -4,12 +4,12 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/bluesky-social/indigo/models"
 	"github.com/gooferOrm/goofer/dialect"
 	"github.com/gooferOrm/goofer/engine"
+	"github.com/gooferOrm/goofer/schema"
 )
 const DB_PATH = "./mockwails.db"
-func GetClient(models ...interface{}) (*engine.Client, error) {
+func GetClient(models ...schema.Entity) (*engine.Client, error) {
 	db, err := sql.Open("sqlite3", DB_PATH)
     if err != nil {
         log.Fatalf("open db: %v", err)
@@ -36,7 +36,7 @@ func CreateServer(server Server) error {
 		return err
 	}
 	serverRepo := engine.Repo[Server](client)
-	return serverRepo.Create(server)
+	return serverRepo.Save(&server)
 }
 
 func GetAllServers() ([]Server, error) {
@@ -50,4 +50,13 @@ func GetAllServers() ([]Server, error) {
 		return nil, err
 	}
 	return servers, nil
+}
+
+func UpdateServer(server Server) error {
+	client, err := GetClient(&Server{})
+	if err != nil {
+		return err
+	}
+	serverRepo := engine.Repo[Server](client)
+	return serverRepo.Save(&server)
 }
