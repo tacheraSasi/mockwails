@@ -60,3 +60,12 @@ func UpdateServer(server Server) error {
 	serverRepo := engine.Repo[Server](client)
 	return serverRepo.Save(&server)
 }
+
+func DeleteServer(ID uint) error {
+	client, err := GetClient(&Server{})
+	if err != nil {
+		return err
+	}
+	serverRepo := engine.Repo[Server](client)
+	return serverRepo.DeleteByID(ID)
+}
