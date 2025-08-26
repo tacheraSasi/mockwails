@@ -9,7 +9,6 @@ import (
 	"github.com/gooferOrm/goofer/engine"
 )
 const DB_PATH = "./mockwails.db"
-
 func GetClient(models ...interface{}) (*engine.Client, error) {
 	db, err := sql.Open("sqlite3", DB_PATH)
     if err != nil {
