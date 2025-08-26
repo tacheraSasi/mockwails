@@ -41,6 +41,7 @@ func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
 }
 
+// CreateServer creates a new server in the database
 func (a *App) CreateServer(data map[string]interface{}) {
 	var server Server
 	b, err := json.Marshal(data)
@@ -52,7 +53,69 @@ func (a *App) CreateServer(data map[string]interface{}) {
 		log.Println("Failed to unmarshal server data:", err)
 		return
 	}
-	err = goofer.CreateServer(*server)
+	err = goofer.CreateServer(goofer.Server{
+		ID:              server.ID,
+		Name:            server.Name,
+		Description:     server.Description,
+		Endpoint:        server.Endpoint,
+		Method:          server.Method,
+		RequestHeaders:  server.RequestHeaders,
+		RequestBody:     server.RequestBody,
+		ResponseStatus:  server.ResponseStatus,
+		ResponseHeaders: server.ResponseHeaders,
+		ResponseBody:    server.ResponseBody,
+	})
+	if err != nil {
+		//TODO: Will shift to a more robust error handling
+		log.Fatal("Failed to create server:", err)
+		return
+	}
 	log.Println("CreateServer called with server:", server)
 	log.Println("SERVER NAME:", server.Name)
 }
+
+// GetAllServers returns all servers from the database
+func (a *App) GetAllServers() ([]Server, error) {
+	servers, err := goofer.GetAllServers()
+	if err != nil {
+		log.Println("Failed to get servers:", err)
+		return nil, err
+	}
+	// Convert goofer.Server to main.Server if needed (fields are the same)
+	var result []Server
+	for _, s := range servers {
+		result = append(result, Server(s))
+	}
+	return result, nil
+}
+
+// UpdateServer updates a server in the database
+func (a *App) UpdateServer(data map[string]interface{}) {
+	var server Server
+	b, err := json.Marshal(data)
+	if err != nil {
+		log.Println("Failed to marshal data:", err)
+		return
+	}
+	if err := json.Unmarshal(b, &server); err != nil {
+		log.Println("Failed to unmarshal server data:", err)
+		return
+	}
+	err = goofer.UpdateServer(goofer.Server(server))
+	if err != nil {
+		log.Println("Failed to update server:", err)
+		return
+	}
+	log.Println("UpdateServer called with server:", server)
+}
+
+// DeleteServer deletes a server by ID
+func (a *App) DeleteServer(id uint) {
+	err := goofer.DeleteServer(id)
+	if err != nil {
+		log.Println("Failed to delete server:", err)
+		return
+	}
+	log.Println("DeleteServer called for ID:", id)
+}
+
