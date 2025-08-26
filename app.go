@@ -54,7 +54,7 @@ func (a *App) CreateServer(data map[string]interface{}) {
 		return
 	}
 	err = goofer.CreateServer(goofer.ServerEntity{
-		ID:              server.ID,
+		// ID:              server.ID,
 		Name:            server.Name,
 		Description:     server.Description,
 		Endpoint:        server.Endpoint,

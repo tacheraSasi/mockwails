@@ -6,6 +6,18 @@ export function CreateServer(arg1) {
   return window['go']['main']['App']['CreateServer'](arg1);
 }
 
+export function DeleteServer(arg1) {
+  return window['go']['main']['App']['DeleteServer'](arg1);
+}
+
+export function GetAllServers() {
+  return window['go']['main']['App']['GetAllServers']();
+}
+
 export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
+}
+
+export function UpdateServer(arg1) {
+  return window['go']['main']['App']['UpdateServer'](arg1);
 }
