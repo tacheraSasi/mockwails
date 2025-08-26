@@ -4,8 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Edit, Play, Search, Square, Trash2 } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
-import { GetAllServers } from "wailsjs/go/main/App";
-import { main } from "wailsjs/go/models";
+import { GetAllServers } from "../../wailsjs/go/main/App";
+import { main } from "../../wailsjs/go/models";
 
 
 const ListMock: React.FC = () => {
