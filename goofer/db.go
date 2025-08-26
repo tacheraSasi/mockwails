@@ -1,4 +1,4 @@
-package goofer
+*package goofer
 
 import (
 	"database/sql"
@@ -11,13 +11,18 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 const DB_PATH = "./mockwails.db"
-func GetClient(models ...schema.Entity) (*engine.Client, error) {
+type GetClientReturn struct {
+	Client *engine.Client
+	db     *sql.DB
+	Error  error
+}
+func GetClient(models ...schema.Entity) GetClientReturn {
 	db, err := sql.Open("sqlite3", DB_PATH)
     if err != nil {
         log.Fatalf("open db: %v", err)
-		return nil, err
+		return GetClientReturn{Error: err}
     }
-    defer db.Close()
+    // defer db.Close()
 
     // engine setup:
     gooferClient, err := engine.NewClient(
