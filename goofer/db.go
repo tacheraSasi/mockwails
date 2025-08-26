@@ -42,19 +42,21 @@ func GetClient(models ...schema.Entity) DBClient {
 
 func CreateServer(server Server) error {
 	dbclient := GetClient(&Server{})
-	if dbclient.err != nil {
-		return err
+	if dbclient.Err != nil {
+		return dbclient.Err
 	}
-	serverRepo := engine.Repo[Server](client.Client)
+	defer dbclient.DB.Close()
+	serverRepo := engine.Repo[Server](dbclient.Client)
 	return serverRepo.Save(&server)
 }
 
 func GetAllServers() ([]Server, error) {
 	dbclient := GetClient(&Server{})
-	if dbclient.err != nil {
-		return nil, err
+	if dbclient.Err != nil {
+		return nil, dbclient.Err
 	}
-	serverRepo := engine.Repo[Server](client.Client)
+	defer dbclient.DB.Close()
+	serverRepo := engine.Repo[Server](dbclient.Client)
 	servers, err := serverRepo.Find().All()
 	if err != nil {
 		return nil, err
@@ -64,18 +66,20 @@ func GetAllServers() ([]Server, error) {
 
 func UpdateServer(server Server) error {
 	dbclient := GetClient(&Server{})
-	if dbclient.err != nil {
-		return err
+	if dbclient.Err != nil {
+		return dbclient.Err
 	}
-	serverRepo := engine.Repo[Server](client.Client)
+	defer dbclient.DB.Close()
+	serverRepo := engine.Repo[Server](dbclient.Client)
 	return serverRepo.Save(&server)
 }
 
 func DeleteServer(ID uint) error {
 	dbclient := GetClient(&Server{})
-	if dbclient.err != nil {
-		return err
+	if dbclient.Err != nil {
+		return dbclient.Err
 	}
-	serverRepo := engine.Repo[Server](client.Client)
+	defer dbclient.DB.Close()
+	serverRepo := engine.Repo[Server](dbclient.Client)
 	return serverRepo.DeleteByID(ID)
 }
