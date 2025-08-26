@@ -7,6 +7,8 @@ import (
 	"github.com/gooferOrm/goofer/dialect"
 	"github.com/gooferOrm/goofer/engine"
 	"github.com/gooferOrm/goofer/schema"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 const DB_PATH = "./mockwails.db"
 func GetClient(models ...schema.Entity) (*engine.Client, error) {
