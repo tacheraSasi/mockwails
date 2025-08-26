@@ -30,7 +30,24 @@ func GetClient(models ...interface{}) (*engine.Client, error) {
 	return gooferClient, nil
 }
 
-func CreateServer() error {
-	// TODO: Implementation for creating a server in the database
-	return nil
+func CreateServer(server Server) error {
+	client, err := GetClient(&Server{})
+	if err != nil {
+		return err
+	}
+	serverRepo := engine.Repo[Server](client)
+	return serverRepo.Create(server)
+}
+
+func GetAllServers() ([]Server, error) {
+	client, err := GetClient(&Server{})
+	if err != nil {
+		return nil, err
+	}
+	serverRepo := engine.Repo[Server](client)
+	servers, err := serverRepo.Find().All()
+	if err != nil {
+		return nil, err
+	}
+	return servers, nil
 }
