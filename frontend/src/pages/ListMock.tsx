@@ -10,7 +10,7 @@ import { main } from "wailsjs/go/models";
 
 const ListMock: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [endpoints, setEndpoints] = useState<main.Server[]>(mockEndpoints);
+  const [endpoints, setEndpoints] = useState<main.Server[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,18 +29,18 @@ const ListMock: React.FC = () => {
       endpoint.description.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const toggleStatus = (id: string) => {
-    setEndpoints(
-      endpoints.map((endpoint) =>
-        endpoint.id === id
-          ? { ...endpoint, status: endpoint.status === "active" ? "inactive" : "active" }
-          : endpoint,
-      ),
-    );
+  const toggleStatus = (id: number) => {
+    // setEndpoints(
+    //   endpoints.map((endpoint) =>
+    //     endpoint.id === id
+    //       ? { ...endpoint, status: endpoint.status === "active" ? "inactive" : "active" }
+    //       : endpoint,
+    //   ),
+    // );
   };
 
-  const deleteMock = (id: string) => {
-    setEndpoints(endpoints.filter((endpoint) => endpoint.id !== +id));
+  const deleteMock = (id: number) => {
+    setEndpoints(endpoints.filter((endpoint) => endpoint.id !== id));
   };
 
   const getMethodColor = (method: string) => {
@@ -124,7 +124,7 @@ const ListMock: React.FC = () => {
                     </span>
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        endpoint. === "active"
+                        endpoint.status === "active"
                           ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
                           : "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
                       }`}

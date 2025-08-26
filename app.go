@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/tacheraSasi/mockwails/goofer"
 )
@@ -23,7 +24,11 @@ type Server struct {
 	ResponseStatus  int    `json:"responseStatus"`
 	ResponseHeaders string `json:"responseHeaders"`
 	ResponseBody    string `json:"responseBody"`
-	goofer.ServerEntity  //TODO: Lookup a better way to handle this
+	Status          string `json:"status"`
+	CreatedAt      time.Time `json:"createdAt"`
+	UpdatedAt      time.Time `json:"updatedAt"`
+
+	// goofer.ServerEntity  //TODO: Lookup a better way to handle this
 }
 
 // NewApp creates a new App application struct
@@ -96,7 +101,7 @@ func (a *App) GetAllServers() ([]Server, error) {
 			ResponseStatus:  s.ResponseStatus,
 			ResponseHeaders: s.ResponseHeaders,
 			ResponseBody:    s.ResponseBody,
-			ServerEntity:    s,
+			// ServerEntity:    s,
 		})
 	}
 	return result, nil
