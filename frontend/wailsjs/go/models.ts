@@ -1,4 +1,4 @@
-export namespace main {
+export namespace db {
 	
 	export class Server {
 	    id: number;

@@ -14,6 +14,10 @@ export function GetAllServers() {
   return window['go']['main']['App']['GetAllServers']();
 }
 
+export function GetServerByID(arg1) {
+  return window['go']['main']['App']['GetServerByID'](arg1);
+}
+
 export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
 }

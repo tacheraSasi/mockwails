@@ -61,6 +61,20 @@ func (a *App) GetAllServers() ([]Server, error) {
 	return servers, nil
 }
 
+func (a *App) GetServerByID(id uint) (*Server, error) {
+	servers, err := db.GetAllServers()
+	if err != nil {
+		log.Println("Failed to get servers:", err)
+		return nil, err
+	}
+	for _, server := range servers {
+		if server.ID == id {
+			return &server, nil
+		}
+	}
+	return nil, fmt.Errorf("server with ID %d not found", id)
+}
+
 // UpdateServer updates a server in the database
 func (a *App) UpdateServer(data map[string]interface{}) {
 	var server Server

@@ -5,12 +5,12 @@ import { Edit, Play, Search, Square, Trash2 } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { GetAllServers } from "../../wailsjs/go/main/App";
-import { main } from "../../wailsjs/go/models";
+import { db } from "../../wailsjs/go/models";
 
 
 const ListMock: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [endpoints, setEndpoints] = useState<main.Server[]>([]);
+  const [endpoints, setEndpoints] = useState<db.Server[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {

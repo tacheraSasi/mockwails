@@ -14,6 +14,16 @@ func GetAllServers() ([]Server, error) {
 	return servers, err
 }
 
+func GetServerByID(id uint) (*Server, error) {
+	db := GetDB()
+	var server Server
+	err := db.First(&server, id).Error
+	if err != nil {
+		return nil, err
+	}
+	return &server, nil
+}
+
 // UpdateServer updates an existing server record in the database.
 func UpdateServer(server *Server) error {
 	db := GetDB()
