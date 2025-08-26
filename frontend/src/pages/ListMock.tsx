@@ -3,18 +3,10 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Edit, Play, Search, Square, Trash2 } from "lucide-react";
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { GetAllServers } from "wailsjs/go/main/App";
+import { main } from "wailsjs/go/models";
 
-interface MockEndpoint {
-  id: string;
-  name: string;
-  description: string;
-  endpoint: string;
-  method: string;
-  status: "active" | "inactive";
-  responseStatus: number;
-  createdAt: string;
-}
 
 // Mock data for demonstration
 const mockEndpoints: MockEndpoint[] = [
@@ -52,7 +44,17 @@ const mockEndpoints: MockEndpoint[] = [
 
 const ListMock: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [endpoints, setEndpoints] = useState<MockEndpoint[]>(mockEndpoints);
+  const [endpoints, setEndpoints] = useState<main.Server[]>(mockEndpoints);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const allServers = await GetAllServers();
+      setEndpoints(allServers);
+      console.log("ALL SERVERS", allServers);
+    };
+
+    fetchData();
+  }, []);
 
   const filteredEndpoints = endpoints.filter(
     (endpoint) =>
@@ -72,7 +74,7 @@ const ListMock: React.FC = () => {
   };
 
   const deleteMock = (id: string) => {
-    setEndpoints(endpoints.filter((endpoint) => endpoint.id !== id));
+    setEndpoints(endpoints.filter((endpoint) => endpoint.id !== +id));
   };
 
   const getMethodColor = (method: string) => {
@@ -117,12 +119,12 @@ const ListMock: React.FC = () => {
             <Button variant="outline" size="sm">
               All ({endpoints.length})
             </Button>
-            <Button variant="outline" size="sm">
+            {/* <Button variant="outline" size="sm">
               Active ({endpoints.filter((e) => e.status === "active").length})
             </Button>
             <Button variant="outline" size="sm">
               Inactive ({endpoints.filter((e) => e.status === "inactive").length})
-            </Button>
+            </Button> */}
           </div>
         </div>
       </Card>

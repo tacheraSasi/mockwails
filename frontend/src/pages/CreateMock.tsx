@@ -10,12 +10,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { CreateServer } from "../../wailsjs/go/main/App";
+import { CreateServer, GetAllServers } from "../../wailsjs/go/main/App";
 
 interface MockFormData {
   name: string;
@@ -44,9 +43,9 @@ const CreateMock: React.FC = () => {
     },
   });
 
-  const onSubmit = (data: MockFormData) => {
+  const onSubmit = async (data: MockFormData) => {
     console.log("Mock data:", data);
-    CreateServer(data);
+    await CreateServer(data);
     toast("Mock created successfully!");
   };
 

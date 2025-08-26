@@ -11,6 +11,7 @@ type ServerEntity struct {
 	ResponseStatus  int    `orm:"type:int;notnull" validate:"required"`
 	ResponseHeaders string `orm:"type:text;notnull" validate:"required"`
 	ResponseBody    string `orm:"type:text;notnull" validate:"required"`
+	// Status          string `orm:"type:varchar(10);default:'inactive'"`
 }
 
 func (ServerEntity) TableName() string {
