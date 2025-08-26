@@ -1,6 +1,6 @@
 package goofer
 
-type ServerSchema struct {
+type ServerEntity struct {
 	ID              uint   `orm:"primaryKey;autoIncrement" validate:"required"`
 	Name            string `orm:"type:varchar(255);notnull" validate:"required"`
 	Description     string `orm:"type:text;notnull" validate:"required"`
@@ -13,6 +13,6 @@ type ServerSchema struct {
 	ResponseBody    string `orm:"type:text;notnull" validate:"required"`
 }
 
-func (ServerSchema) TableName() string {
+func (ServerEntity) TableName() string {
 	return "servers"
 }

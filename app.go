@@ -53,7 +53,7 @@ func (a *App) CreateServer(data map[string]interface{}) {
 		log.Println("Failed to unmarshal server data:", err)
 		return
 	}
-	err = goofer.CreateServer(goofer.ServerSchema{
+	err = goofer.CreateServer(goofer.ServerEntity{
 		ID:              server.ID,
 		Name:            server.Name,
 		Description:     server.Description,
@@ -101,7 +101,7 @@ func (a *App) UpdateServer(data map[string]interface{}) {
 		log.Println("Failed to unmarshal server data:", err)
 		return
 	}
-	err = goofer.UpdateServer(goofer.ServerSchema(server))
+	err = goofer.UpdateServer(goofer.ServerEntity(server))
 	if err != nil {
 		log.Println("Failed to update server:", err)
 		return
