@@ -61,8 +61,13 @@ func parseHeaders(headerStr string) map[string]string {
 	return headers
 }
 
-func Stop() {
+func Stop(server db.Server) error {
+	err := db.ToggleServerStatus(server.ID)
+	if err != nil {
+		return err
+	}
 	//TODO: Stop a running mock server
+	return nil
 }
 
 func CheckStatus(server db.Server) string {

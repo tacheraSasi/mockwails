@@ -30,6 +30,7 @@ func UpdateServer(server *Server) error {
 	return db.Save(server).Error
 }
 
+// ToggleServerStatus toggles the status of a server between active and inactive.
 func ToggleServerStatus(id uint) error {
 	db := GetDB()
 	var server Server
