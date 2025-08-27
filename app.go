@@ -7,6 +7,7 @@ import (
 	"log"
 
 	"github.com/tacheraSasi/mockwails/db"
+	"github.com/tacheraSasi/mockwails/mockserver"
 )
 
 type App struct {
@@ -61,6 +62,7 @@ func (a *App) GetAllServers() ([]Server, error) {
 	return servers, nil
 }
 
+// GetServerByID retrieves a server by its ID
 func (a *App) GetServerByID(id uint) (*Server, error) {
 	servers, err := db.GetAllServers()
 	if err != nil {
@@ -76,7 +78,7 @@ func (a *App) GetServerByID(id uint) (*Server, error) {
 }
 
 // UpdateServer updates a server in the database
-func (a *App) UpdateServer(data map[string]interface{}) {
+func (a *App) UpdateServer(data map[string]any) {
 	var server Server
 	b, err := json.Marshal(data)
 	if err != nil {
@@ -103,4 +105,20 @@ func (a *App) DeleteServer(id uint) {
 		return
 	}
 	log.Println("DeleteServer called for ID:", id)
+}
+
+// StartServer starts a server by ID
+func (a *App) StartServer(id uint) {
+	server, err := db.GetServerByID(id)
+	if err != nil {
+		log.Println("Failed to get server:", err)
+		return
+	}
+	log.Println("StartServer called for server:", server)
+	err = db.ToggleServerStatus(server.ID)
+	if err != nil {
+		return //TODO: figure a correct way to handle this
+	}
+	mockserver.CheckStatus(*server)
+	mockserver.Start(*server)
 }
