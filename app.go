@@ -8,6 +8,7 @@ import (
 
 	"github.com/tacheraSasi/mockwails/db"
 	"github.com/tacheraSasi/mockwails/mockserver"
+	"github.com/tacheraSasi/mockwails/utils"
 )
 
 type App struct {
@@ -32,22 +33,22 @@ func (a *App) Greet(name string) string {
 }
 
 // CreateServer creates a new server in the database
-func (a *App) CreateServer(data map[string]interface{}) {
+func (a *App) CreateServer(data map[string]interface{}) utils.Response {
 	fmt.Println("CreateServer called with data:", data)
 	var server Server
 	b, err := json.Marshal(data)
 	if err != nil {
 		log.Println("Failed to marshal data:", err)
-		return
+		return utils.Response{Success: false, Message: "Failed to create server: " + err.Error()}
 	}
 	if err := json.Unmarshal(b, &server); err != nil {
 		log.Println("Failed to unmarshal server data:", err)
-		return
+		return utils.Response{Success: false, Message: "Failed to create server: " + err.Error()}
 	}
 	err = db.CreateServer(&server)
 	if err != nil {
 		log.Println("Failed to create server:", err)
-		return
+		return utils.Response{Success: false, Message: "Failed to create server: " + err.Error()}
 	}
 	log.Println("CreateServer called with server:", server)
 	log.Println("SERVER NAME:", server.Name)
@@ -56,6 +57,7 @@ func (a *App) CreateServer(data map[string]interface{}) {
 	//But for now i start it as soon as the server is created
 	a.StartServer(server.ID)
 	log.Println("SERVER started:", server.Name)
+	return utils.Response{Success: true, Message: "Server created successfully", Data: server}
 }
 
 // GetAllServers returns all servers from the database
