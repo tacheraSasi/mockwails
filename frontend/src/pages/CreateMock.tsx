@@ -26,6 +26,7 @@ interface MockFormData {
   responseStatus: number;
   responseHeaders: string;
   responseBody: string;
+  addressAssigned?: { port: number };
 }
 
 const CreateMock: React.FC = () => {
@@ -40,6 +41,7 @@ const CreateMock: React.FC = () => {
       responseStatus: 200,
       responseHeaders: '{"Content-Type": "application/json"}',
       responseBody: '{"message": "Hello World"}',
+      addressAssigned: { port: 8080 },
     },
   });
 
@@ -52,7 +54,9 @@ const CreateMock: React.FC = () => {
   return (
     <div className="w-full max-w-4xl mx-auto p-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground mb-2">Create Mock Endpoint</h1>
+        <h1 className="text-2xl font-bold text-foreground mb-2">
+          Create Mock Endpoint
+        </h1>
         <p className="text-muted-foreground">
           Define a mock API endpoint with request and response specifications.
         </p>
@@ -74,7 +78,9 @@ const CreateMock: React.FC = () => {
                     <FormControl>
                       <Input placeholder="e.g., User API Mock" {...field} />
                     </FormControl>
-                    <FormDescription>A descriptive name for your mock</FormDescription>
+                    <FormDescription>
+                      A descriptive name for your mock
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -96,6 +102,31 @@ const CreateMock: React.FC = () => {
                     <FormMessage />
                   </FormItem>
                 )}
+              />
+              <FormField
+                control={form.control}
+                name="addressAssigned.port"
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <FormLabel>PORT</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="e.g., 8080"
+                          value={field.value}
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value))
+                          }
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        The port that the server will listen on
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
               />
 
               <div className="grid grid-cols-2 gap-4 mt-4">
@@ -140,7 +171,9 @@ const CreateMock: React.FC = () => {
 
             {/* Response Configuration */}
             <Card className="p-6">
-              <h2 className="text-lg font-semibold mb-4">Response Configuration</h2>
+              <h2 className="text-lg font-semibold mb-4">
+                Response Configuration
+              </h2>
 
               <FormField
                 control={form.control}
@@ -153,7 +186,9 @@ const CreateMock: React.FC = () => {
                         type="number"
                         placeholder="200"
                         {...field}
-                        onChange={(e) => field.onChange(Number.parseInt(e.target.value))}
+                        onChange={(e) =>
+                          field.onChange(Number.parseInt(e.target.value))
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -174,7 +209,9 @@ const CreateMock: React.FC = () => {
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>Headers to return with the response</FormDescription>
+                    <FormDescription>
+                      Headers to return with the response
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -193,7 +230,9 @@ const CreateMock: React.FC = () => {
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>The response data to return</FormDescription>
+                    <FormDescription>
+                      The response data to return
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -203,7 +242,9 @@ const CreateMock: React.FC = () => {
 
           {/* Request Configuration */}
           <Card className="p-6">
-            <h2 className="text-lg font-semibold mb-4">Request Configuration (Optional)</h2>
+            <h2 className="text-lg font-semibold mb-4">
+              Request Configuration (Optional)
+            </h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <FormField
                 control={form.control}
@@ -218,7 +259,9 @@ const CreateMock: React.FC = () => {
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>Headers that the request should contain</FormDescription>
+                    <FormDescription>
+                      Headers that the request should contain
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -237,7 +280,9 @@ const CreateMock: React.FC = () => {
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>Expected structure of the request body</FormDescription>
+                    <FormDescription>
+                      Expected structure of the request body
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -247,7 +292,11 @@ const CreateMock: React.FC = () => {
 
           {/* Submit Button */}
           <div className="flex justify-end space-x-4">
-            <Button type="button" variant="outline" onClick={() => form.reset()}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => form.reset()}
+            >
               Reset Form
             </Button>
             <Button

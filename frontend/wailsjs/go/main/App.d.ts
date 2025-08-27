@@ -12,4 +12,6 @@ export function GetServerByID(arg1:number):Promise<db.Server>;
 
 export function Greet(arg1:string):Promise<string>;
 
+export function StartServer(arg1:number):Promise<void>;
+
 export function UpdateServer(arg1:Record<string, any>):Promise<void>;

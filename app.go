@@ -33,6 +33,7 @@ func (a *App) Greet(name string) string {
 
 // CreateServer creates a new server in the database
 func (a *App) CreateServer(data map[string]interface{}) {
+	fmt.Println("CreateServer called with data:", data)
 	var server Server
 	b, err := json.Marshal(data)
 	if err != nil {

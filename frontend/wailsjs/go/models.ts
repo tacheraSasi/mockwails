@@ -1,5 +1,21 @@
 export namespace db {
 	
+	export class AddressAssigned {
+	    id: number;
+	    serverId: number;
+	    port: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new AddressAssigned(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.serverId = source["serverId"];
+	        this.port = source["port"];
+	    }
+	}
 	export class Server {
 	    id: number;
 	    name: string;
@@ -12,6 +28,7 @@ export namespace db {
 	    responseHeaders: string;
 	    responseBody: string;
 	    status: string;
+	    addressAssigned: AddressAssigned;
 	    // Go type: time
 	    createdAt: any;
 	    // Go type: time
@@ -34,6 +51,7 @@ export namespace db {
 	        this.responseHeaders = source["responseHeaders"];
 	        this.responseBody = source["responseBody"];
 	        this.status = source["status"];
+	        this.addressAssigned = this.convertValues(source["addressAssigned"], AddressAssigned);
 	        this.createdAt = this.convertValues(source["createdAt"], null);
 	        this.updatedAt = this.convertValues(source["updatedAt"], null);
 	    }
