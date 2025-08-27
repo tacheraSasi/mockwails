@@ -17,7 +17,7 @@ func GetAllServers() ([]Server, error) {
 func GetServerByID(id uint) (*Server, error) {
 	db := GetDB()
 	var server Server
-	err := db.First(&server, id).Error
+	err := db.Preload("AddressAssigned").First(&server, id).Error
 	if err != nil {
 		return nil, err
 	}
