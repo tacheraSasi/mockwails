@@ -30,6 +30,20 @@ func UpdateServer(server *Server) error {
 	return db.Save(server).Error
 }
 
+func ToggleServerStatus(id uint) error {
+	db := GetDB()
+	var server Server
+	if err := db.First(&server, id).Error; err != nil {
+		return err
+	}
+	if server.Status == "active" {
+		server.Status = "inactive"
+	} else {
+		server.Status = "active"
+	}
+	return db.Save(&server).Error
+}
+
 // DeleteServer deletes a server record by ID.
 func DeleteServer(id uint) error {
 	db := GetDB()
