@@ -50,6 +50,11 @@ func (a *App) CreateServer(data map[string]interface{}) {
 	}
 	log.Println("CreateServer called with server:", server)
 	log.Println("SERVER NAME:", server.Name)
+
+	//TODO: Come up with a better flow of starting a server
+	//But for now i start it as soon as the server is created
+	a.StartServer(server.ID)
+	log.Println("SERVER started:", server.Name)
 }
 
 // GetAllServers returns all servers from the database
@@ -120,5 +125,5 @@ func (a *App) StartServer(id uint) {
 		return //TODO: figure a correct way to handle this
 	}
 	mockserver.CheckStatus(*server)
-	mockserver.Start(*server)
+	mockserver.Start(*server) //TODO: Will fix this by returning some sort of response so the the fronted can get the context
 }
