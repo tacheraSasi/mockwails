@@ -77,3 +77,24 @@ export namespace db {
 
 }
 
+export namespace utils {
+	
+	export class Response {
+	    success: boolean;
+	    message: string;
+	    data?: any;
+	
+	    static createFrom(source: any = {}) {
+	        return new Response(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.success = source["success"];
+	        this.message = source["message"];
+	        this.data = source["data"];
+	    }
+	}
+
+}
+

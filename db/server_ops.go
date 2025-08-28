@@ -14,6 +14,14 @@ func GetAllServers() ([]Server, error) {
 	return servers, err
 }
 
+// GetAllActiveServers retrieves all active server records from the database.
+func GetAllActiveServers() ([]Server, error) {
+	db := GetDB()
+	var servers []Server
+	err := db.Where("status = ?", "active").Find(&servers).Error
+	return servers, err
+}
+
 func GetServerByID(id uint) (*Server, error) {
 	db := GetDB()
 	var server Server
