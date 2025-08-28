@@ -21,9 +21,10 @@ type Config struct {
 func init() {
 	fmt.Println("Config initialized...")
 	once.Do(func() {
-		// TODO: I will Create a folder mockwails in the $HOME directory of the user
 		config := GetConfig()
-		os.MkdirAll(config.ConfigPath, os.ModePerm)
+		if err := os.MkdirAll(config.ConfigPath, 0755); err != nil {
+			fmt.Printf("Failed to create config directory: %v\n", err)
+		}
 	})
 }
 
