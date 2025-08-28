@@ -11,6 +11,7 @@ import {
   StopServer,
   DeleteServer,
 } from "../../wailsjs/go/main/App";
+import { BrowserOpenURL } from "../../wailsjs/runtime";
 import { db } from "../../wailsjs/go/models";
 import { formattedTime, getMethodColor } from "@/lib/utils";
 import { useNavigation } from "@/contexts/NavigationContext";
@@ -106,7 +107,7 @@ const ListMock: React.FC = () => {
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-foreground mb-2">
-          Mock Endpoints
+          Endpoints
         </h1>
         <p className="text-muted-foreground text-sm">
           Manage your mock API endpoints. You can enable, disable, edit, or
@@ -190,7 +191,12 @@ const ListMock: React.FC = () => {
                     <div>
                       <span className="font-medium">Endpoint:</span>
                       <code className="ml-1 px-2 py-1 bg-muted rounded font-mono">
-                        <a href={`http://localhost:${endpoint.addressAssigned?.port}${endpoint.endpoint}`}>
+                        <a
+                          href={`http://localhost:${endpoint.addressAssigned?.port}${endpoint.endpoint}`}
+                          onClick={() => {
+                            BrowserOpenURL(`http://localhost:${endpoint.addressAssigned?.port}${endpoint.endpoint}`);
+                          }}
+                        >
                           {endpoint.endpoint}
                         </a>
                       </code>
