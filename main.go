@@ -20,7 +20,7 @@ func main() {
 
 	err := wails.Run(&options.App{
 		Title:         "MockWails",
-		Width:         1000,
+		Width:         1200,
 		Height:        700,
 		DisableResize: false,
 		AssetServer: &assetserver.Options{

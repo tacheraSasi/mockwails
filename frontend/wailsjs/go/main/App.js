@@ -26,6 +26,10 @@ export function StartServer(arg1) {
   return window['go']['main']['App']['StartServer'](arg1);
 }
 
+export function StopServer(arg1) {
+  return window['go']['main']['App']['StopServer'](arg1);
+}
+
 export function UpdateServer(arg1) {
   return window['go']['main']['App']['UpdateServer'](arg1);
 }

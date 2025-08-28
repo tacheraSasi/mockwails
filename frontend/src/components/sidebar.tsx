@@ -33,15 +33,15 @@ const Sidebar: React.FC<SidebarProps> = ({
       <aside
         className={cn(
           "bg-background text-foreground shadow-xl flex flex-col border-r border-border transition-all duration-300 ease-in-out",
-          isCollapsed ? "w-20" : "w-64"
+          isCollapsed ? "w-22" : "w-64"
         )}
       >
         {/* Logo & App Name */}
-        <div className="flex items-center gap-3 p-6 border-b border-border h-[6.5rem]">
+        <div className="flex items-center m-auto gap-3 p-3 border-b border-border h-[4rem]">
           <img
             src={Logo}
             alt="MockWAILS Logo"
-            className="w-10 h-10 rounded shadow"
+            className="w-12 h-12 rounded shadow"
           />
           <span
             className={cn(
@@ -53,7 +53,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           </span>
         </div>
         {/* Nav */}
-        <nav className="flex-1 p-6 space-y-2">
+        <nav className="flex-1 p-3 space-y-2">
           {navItems.map(({ id, icon: Icon, label }) => (
             <button
               type="button"
@@ -84,7 +84,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         <div className="p-4 border-t border-border flex items-center justify-between">
           <button
             onClick={toggleSidebar}
-            className="p-2 rounded-lg hover:bg-accent"
+            className={`p-2 ${cn(isCollapsed && "m-auto")} rounded-lg hover:bg-accent`}
           >
             <ChevronLeft
               size={20}

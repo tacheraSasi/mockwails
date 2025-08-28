@@ -39,7 +39,19 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
-// Greet returns a greeting for the given name
+func (a *App) shutdown() {
+	fmt.Println("App shutting down...")
+	//TODO: Here i should stop all the servers from the db where status is active
+	servers, err := db.GetAllActiveServers()
+	if err != nil {
+		fmt.Println("Failed to get active servers:", err)
+		return
+	}
+	for _, server := range servers {
+		a.StopServer(server.ID)
+	}
+}
+
 func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
 }
@@ -141,4 +153,19 @@ func (a *App) StartServer(id uint) {
 	}
 	mockserver.CheckStatus(*server)
 	mockserver.Start(*server) //TODO: Will fix this by returning some sort of response so the the fronted can get the context
+}
+
+func (a *App) StopServer(id uint) {
+	server, err := db.GetServerByID(id)
+	if err != nil {
+		log.Println("Failed to get server:", err)
+		return
+	}
+	log.Println("StopServer called for server:", server)
+	err = db.ToggleServerStatus(server.ID)
+	if err != nil {
+		return //TODO: figure a correct way to handle this
+	}
+	mockserver.CheckStatus(*server)
+	mockserver.Stop(*server) //TODO: Will fix this by returning some sort of response so the the fronted can get the context
 }
