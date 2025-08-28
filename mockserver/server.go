@@ -1,23 +1,30 @@
 package mockserver
 
 import (
-	"github.com/tacheraSasi/mockwails/db"
-	"github.com/tacheraSasi/mockwails/utils"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/tacheraSasi/mockwails/db"
+	"github.com/tacheraSasi/mockwails/utils"
 )
 
 // Start launches a mock HTTP server based on the Server struct details
-func Start(server db.Server) {
+func Start(server db.Server) error {
 	port := server.AddressAssigned.Port
 	endpoint := server.Endpoint
 	method := strings.ToUpper(server.Method)
 	responseStatus := server.ResponseStatus
 	responseHeaders := parseHeaders(server.ResponseHeaders)
 	responseBody := server.ResponseBody
+
+	// Check if port is already in use
+	if utils.IsPortInUse(port) {
+		return fmt.Errorf("port %d is already in use", port)
+	}
 
 	mux := http.NewServeMux()
 	mux.HandleFunc(endpoint, func(w http.ResponseWriter, r *http.Request) {
@@ -40,6 +47,7 @@ func Start(server db.Server) {
 		}
 	}()
 
+	return nil
 }
 
 // parseHeaders parses a JSON or key-value string into a map

@@ -39,12 +39,15 @@ func (a *App) startup(ctx context.Context) {
 		return
 	}
 	for _, server := range servers {
-		a.StartServer(server.ID)
+		response := a.StartServer(server.ID)
+		if !response.Success {
+			fmt.Printf("Failed to start server %s: %s\n", server.Name, response.Message)
+		}
 	}
 	a.ctx = ctx
 }
 
-func (a *App) shutdown() {
+func (a *App) shutdown(ctx context.Context) {
 	fmt.Println("App shutting down...")
 	//TODO: Here i should stop all the servers from the db where status is active
 	servers, err := db.GetAllActiveServers()
@@ -53,7 +56,10 @@ func (a *App) shutdown() {
 		return
 	}
 	for _, server := range servers {
-		a.StopServer(server.ID)
+		response := a.StopServer(server.ID)
+		if !response.Success {
+			fmt.Printf("Failed to stop server %s: %s\n", server.Name, response.Message)
+		}
 	}
 }
 
@@ -74,6 +80,10 @@ func (a *App) CreateServer(data map[string]interface{}) utils.Response {
 		log.Println("Failed to unmarshal server data:", err)
 		return utils.Response{Success: false, Message: "Failed to create server: " + err.Error()}
 	}
+	
+	// Set the server status to inactive initially
+	server.Status = "inactive"
+	
 	err = db.CreateServer(&server)
 	if err != nil {
 		log.Println("Failed to create server:", err)
@@ -82,11 +92,15 @@ func (a *App) CreateServer(data map[string]interface{}) utils.Response {
 	log.Println("CreateServer called with server:", server)
 	log.Println("SERVER NAME:", server.Name)
 
-	//TODO: Come up with a better flow of starting a server
-	//But for now i start it as soon as the server is created
-	a.StartServer(server.ID)
+	// Start the server after creation
+	startResponse := a.StartServer(server.ID)
+	if !startResponse.Success {
+		log.Println("Failed to start server:", startResponse.Message)
+		return utils.Response{Success: false, Message: "Server created but failed to start: " + startResponse.Message}
+	}
+	
 	log.Println("SERVER started:", server.Name)
-	return utils.Response{Success: true, Message: "Server created successfully", Data: server}
+	return utils.Response{Success: true, Message: "Server created and started successfully", Data: server}
 }
 
 // GetAllServers returns all servers from the database
@@ -115,62 +129,95 @@ func (a *App) GetServerByID(id uint) (*Server, error) {
 }
 
 // UpdateServer updates a server in the database
-func (a *App) UpdateServer(data map[string]any) {
+func (a *App) UpdateServer(data map[string]any) utils.Response {
 	var server Server
 	b, err := json.Marshal(data)
 	if err != nil {
 		log.Println("Failed to marshal data:", err)
-		return
+		return utils.Response{Success: false, Message: "Failed to update server: " + err.Error()}
 	}
 	if err := json.Unmarshal(b, &server); err != nil {
 		log.Println("Failed to unmarshal server data:", err)
-		return
+		return utils.Response{Success: false, Message: "Failed to update server: " + err.Error()}
 	}
 	err = db.UpdateServer(&server)
 	if err != nil {
 		log.Println("Failed to update server:", err)
-		return
+		return utils.Response{Success: false, Message: "Failed to update server: " + err.Error()}
 	}
 	log.Println("UpdateServer called with server:", server)
+	return utils.Response{Success: true, Message: "Server updated successfully", Data: server}
 }
 
 // DeleteServer deletes a server by ID
-func (a *App) DeleteServer(id uint) {
-	err := db.DeleteServer(id)
+func (a *App) DeleteServer(id uint) utils.Response {
+	// First stop the server if it's running
+	server, err := db.GetServerByID(id)
+	if err != nil {
+		log.Println("Failed to get server:", err)
+		return utils.Response{Success: false, Message: "Failed to get server: " + err.Error()}
+	}
+	
+	if server.Status == "active" {
+		stopResponse := a.StopServer(id)
+		if !stopResponse.Success {
+			log.Println("Failed to stop server before deletion:", stopResponse.Message)
+			return utils.Response{Success: false, Message: "Failed to stop server before deletion: " + stopResponse.Message}
+		}
+	}
+	
+	err = db.DeleteServer(id)
 	if err != nil {
 		log.Println("Failed to delete server:", err)
-		return
+		return utils.Response{Success: false, Message: "Failed to delete server: " + err.Error()}
 	}
 	log.Println("DeleteServer called for ID:", id)
+	return utils.Response{Success: true, Message: "Server deleted successfully"}
 }
 
 // StartServer starts a server by ID
-func (a *App) StartServer(id uint) {
+func (a *App) StartServer(id uint) utils.Response {
 	server, err := db.GetServerByID(id)
 	if err != nil {
 		log.Println("Failed to get server:", err)
-		return
+		return utils.Response{Success: false, Message: "Failed to get server: " + err.Error()}
 	}
 	log.Println("StartServer called for server:", server)
-	err = db.ToggleServerStatus(server.ID)
-	if err != nil {
-		return //TODO: figure a correct way to handle this
+	
+	if server.Status == "inactive" {
+		err = db.ToggleServerStatus(server.ID)
+		if err != nil {
+			return utils.Response{Success: false, Message: "Failed to toggle server status: " + err.Error()}
+		}
 	}
+	
 	mockserver.CheckStatus(*server)
-	mockserver.Start(*server) //TODO: Will fix this by returning some sort of response so the the fronted can get the context
+	err = mockserver.Start(*server)
+	if err != nil {
+		log.Println("Failed to start mock server:", err)
+		if server.Status == "inactive" {
+			db.ToggleServerStatus(server.ID)
+		}
+		return utils.Response{Success: false, Message: "Failed to start mock server: " + err.Error()}
+	}
+	
+	return utils.Response{Success: true, Message: "Server started successfully", Data: server}
 }
 
-func (a *App) StopServer(id uint) {
+func (a *App) StopServer(id uint) utils.Response {
 	server, err := db.GetServerByID(id)
 	if err != nil {
 		log.Println("Failed to get server:", err)
-		return
+		return utils.Response{Success: false, Message: "Failed to get server: " + err.Error()}
 	}
 	log.Println("StopServer called for server:", server)
-	err = db.ToggleServerStatus(server.ID)
+	
+	err = mockserver.Stop(*server)
 	if err != nil {
-		return //TODO: figure a correct way to handle this
+		log.Println("Failed to stop server:", err)
+		return utils.Response{Success: false, Message: "Failed to stop server: " + err.Error()}
 	}
+	
 	mockserver.CheckStatus(*server)
-	mockserver.Stop(*server) //TODO: Will fix this by returning some sort of response so the the fronted can get the context
+	return utils.Response{Success: true, Message: "Server stopped successfully", Data: server}
 }

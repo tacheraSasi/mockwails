@@ -15,8 +15,8 @@ func IsPortInUse(port int) bool {
 	address := fmt.Sprintf(":%d", port)
 	ln, err := net.Listen("tcp", address)
 	if err != nil {
-		return false
+		return true // Port is in use
 	}
 	defer ln.Close()
-	return true
+	return false // Port is available
 }

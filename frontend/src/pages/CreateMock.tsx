@@ -52,9 +52,21 @@ const CreateMock: React.FC = () => {
   });
 
   const onSubmit = async (data: MockFormData) => {
-    console.log("Mock data:", data);
-    await CreateServer(data);
-    toast("Mock created successfully!");
+    try {
+      console.log("Mock data:", data);
+      const response = await CreateServer(data);
+      console.log("Create server response:", response);
+      
+      if (response.success) {
+        toast("Mock created successfully!");
+        form.reset(); // Reset form on success
+      } else {
+        toast(`Failed to create mock: ${response.message}`);
+      }
+    } catch (error) {
+      console.error("Error creating server:", error);
+      toast("An unexpected error occurred while creating the mock");
+    }
   };
 
   return (

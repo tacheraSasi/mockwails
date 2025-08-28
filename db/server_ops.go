@@ -3,6 +3,21 @@ package db
 // SeedServers creates initial seed servers if they do not already exist (no duplicates by Name).
 func SeedServers() error {
 	db := GetDB()
+	
+	// Fix existing servers that don't have AddressAssigned
+	var serversWithoutAddress []Server
+	err := db.Where("id NOT IN (SELECT server_id FROM address_assigned)").Find(&serversWithoutAddress).Error
+	if err == nil {
+		for _, server := range serversWithoutAddress {
+			port := findNextAvailablePort(8000)
+			addressAssigned := AddressAssigned{
+				ServerID: server.ID,
+				Port:     port,
+			}
+			db.Create(&addressAssigned)
+		}
+	}
+	
 	seedData := []Server{
 		{
 			Name:            "Sample User API",
@@ -16,6 +31,7 @@ func SeedServers() error {
 			RequestQuery:    "",
 			ResponseHeaders: "",
 			RequestBody:     "",
+			AddressAssigned: AddressAssigned{Port: 8001},
 		},
 		{
 			Name:            "Sample Product API",
@@ -29,6 +45,7 @@ func SeedServers() error {
 			RequestHeaders:  "",
 			RequestQuery:    "",
 			ResponseHeaders: "",
+			AddressAssigned: AddressAssigned{Port: 8002},
 		},
 		{
 			Name:            "Update User API",
@@ -42,6 +59,7 @@ func SeedServers() error {
 			RequestHeaders:  "",
 			RequestQuery:    "",
 			ResponseHeaders: "",
+			AddressAssigned: AddressAssigned{Port: 8003},
 		},
 		{
 			Name:            "Delete Product API",
@@ -55,6 +73,7 @@ func SeedServers() error {
 			RequestHeaders:  "",
 			RequestQuery:    "",
 			ResponseHeaders: "",
+			AddressAssigned: AddressAssigned{Port: 8004},
 		},
 		{
 			Name:            "Update User Email API",
@@ -68,6 +87,7 @@ func SeedServers() error {
 			RequestHeaders:  "",
 			RequestQuery:    "",
 			ResponseHeaders: "",
+			AddressAssigned: AddressAssigned{Port: 8005},
 		},
 		{
 			Name:            "Get Orders API",
@@ -81,6 +101,7 @@ func SeedServers() error {
 			RequestHeaders:  "",
 			RequestQuery:    "",
 			ResponseHeaders: "",
+			AddressAssigned: AddressAssigned{Port: 8006},
 		},
 	}
 
@@ -101,7 +122,36 @@ func SeedServers() error {
 // CreateServer inserts a new server record into the database.
 func CreateServer(server *Server) error {
 	db := GetDB()
+	
+	var existingAddress AddressAssigned
+	err := db.Where("port = ?", server.AddressAssigned.Port).First(&existingAddress).Error
+	if err == nil {
+		// Port is already assigned, find next available port
+		server.AddressAssigned.Port = findNextAvailablePort(server.AddressAssigned.Port)
+	}
+	
 	return db.Create(server).Error
+}
+
+// findNextAvailablePort finds the next available port starting from the given port
+func findNextAvailablePort(startPort int) int {
+	db := GetDB()
+	for port := startPort; port <= 65535; port++ {
+		var existingAddress AddressAssigned
+		err := db.Where("port = ?", port).First(&existingAddress).Error
+		if err != nil { // Port not found in database, it's available
+			return port
+		}
+	}
+	// If no port is available in the range, start from 8000
+	for port := 8000; port < startPort; port++ {
+		var existingAddress AddressAssigned
+		err := db.Where("port = ?", port).First(&existingAddress).Error
+		if err != nil {
+			return port
+		}
+	}
+	return 9000 // fallback port
 }
 
 // GetAllServers retrieves all server records from the database.

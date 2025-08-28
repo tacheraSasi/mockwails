@@ -5,7 +5,7 @@ import {db} from '../models';
 
 export function CreateServer(arg1:Record<string, any>):Promise<utils.Response>;
 
-export function DeleteServer(arg1:number):Promise<void>;
+export function DeleteServer(arg1:number):Promise<utils.Response>;
 
 export function GetAllServers():Promise<Array<db.Server>>;
 
@@ -13,8 +13,8 @@ export function GetServerByID(arg1:number):Promise<db.Server>;
 
 export function Greet(arg1:string):Promise<string>;
 
-export function StartServer(arg1:number):Promise<void>;
+export function StartServer(arg1:number):Promise<utils.Response>;
 
-export function StopServer(arg1:number):Promise<void>;
+export function StopServer(arg1:number):Promise<utils.Response>;
 
-export function UpdateServer(arg1:Record<string, any>):Promise<void>;
+export function UpdateServer(arg1:Record<string, any>):Promise<utils.Response>;

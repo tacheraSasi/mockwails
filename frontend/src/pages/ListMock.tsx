@@ -5,21 +5,28 @@ import { Badge } from "@/components/ui/badge";
 import { Edit, Play, Search, Square, Trash2 } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
-import { GetAllServers, StartServer } from "../../wailsjs/go/main/App";
+import { GetAllServers, StartServer, StopServer, DeleteServer } from "../../wailsjs/go/main/App";
 import { db } from "../../wailsjs/go/models";
 import { formattedTime, getMethodColor } from "@/lib/utils";
 import { useNavigation } from "@/contexts/NavigationContext";
+import { toast } from "sonner";
 
 const ListMock: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const { setCurrentPage } = useNavigation();
   const [endpoints, setEndpoints] = useState<db.Server[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = async () => {
+    try {
       const allServers = await GetAllServers();
       setEndpoints(allServers);
-    };
+    } catch (error) {
+      console.error("Failed to fetch servers:", error);
+      toast("Failed to fetch servers");
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -30,17 +37,59 @@ const ListMock: React.FC = () => {
       endpoint.description.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const toggleStatus = (id: number) => {
-    // TODO: integrate backend toggle
+  const toggleStatus = async (id: number) => {
+    try {
+      const endpoint = endpoints.find(e => e.id === id);
+      if (!endpoint) return;
+      
+      let response;
+      if (endpoint.status === "active") {
+        response = await StopServer(id);
+      } else {
+        response = await StartServer(id);
+      }
+      
+      if (response.success) {
+        toast(response.message);
+        await fetchData(); // Refresh the list
+      } else {
+        toast(`Failed to ${endpoint.status === "active" ? "stop" : "start"} server: ${response.message}`);
+      }
+    } catch (error) {
+      console.error("Error toggling server status:", error);
+      toast("An unexpected error occurred");
+    }
   };
 
   const startServer = async (serverId: number) => {
-    const res = await StartServer(serverId);
-    console.log("START SERVER RES", res);
+    try {
+      const res = await StartServer(serverId);
+      console.log("START SERVER RES", res);
+      if (res.success) {
+        toast(res.message);
+        await fetchData(); // Refresh the list
+      } else {
+        toast(`Failed to start server: ${res.message}`);
+      }
+    } catch (error) {
+      console.error("Error starting server:", error);
+      toast("An unexpected error occurred");
+    }
   };
 
-  const deleteMock = (id: number) => {
-    setEndpoints(endpoints.filter((endpoint) => endpoint.id !== id));
+  const deleteMock = async (id: number) => {
+    try {
+      const response = await DeleteServer(id);
+      if (response.success) {
+        toast(response.message);
+        setEndpoints(endpoints.filter((endpoint) => endpoint.id !== id));
+      } else {
+        toast(`Failed to delete server: ${response.message}`);
+      }
+    } catch (error) {
+      console.error("Error deleting server:", error);
+      toast("An unexpected error occurred");
+    }
   };
 
   return (
