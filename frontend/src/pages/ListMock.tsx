@@ -4,9 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Edit, Play, Search, Square, Trash2 } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
-import { GetAllServers } from "../../wailsjs/go/main/App";
+import { GetAllServers, StartServer } from "../../wailsjs/go/main/App";
 import { db } from "../../wailsjs/go/models";
-import { getMethodColor } from "@/lib/utils";
+import { formattedTime, getMethodColor } from "@/lib/utils";
 
 
 const ListMock: React.FC = () => {
@@ -38,6 +38,11 @@ const ListMock: React.FC = () => {
     //       : endpoint,
     //   ),
     // );
+  };
+
+  const startServer = async (serverId: number) => {
+    const res = await StartServer(serverId);
+    console.log("START SERVER RES", res);
   };
 
   const deleteMock = (id: number) => {
@@ -132,7 +137,7 @@ const ListMock: React.FC = () => {
                       <span className="font-medium">Status Code:</span> {endpoint.responseStatus}
                     </div>
                     <div>
-                      <span className="font-medium">Created:</span> {endpoint.createdAt}
+                      <span className="font-medium">Created:</span> {formattedTime(endpoint.createdAt)}
                     </div>
                   </div>
                 </div>
