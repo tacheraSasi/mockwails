@@ -6,7 +6,7 @@ import { NavigationProvider } from "@/contexts/NavigationContext";
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+    <ThemeProvider defaultTheme="system" storageKey="mockwails-theme">
       <NavigationProvider>
         <Layout>
           <Toaster />
