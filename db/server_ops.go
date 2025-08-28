@@ -18,6 +18,7 @@ func CreateServer(server *Server) error {
 
 // findNextAvailablePort finds the next available port starting from the given port
 func findNextAvailablePort(startPort int) int {
+	//TODO:: Maybe i will free all the running port that are not in use and started by mockwails
 	db := GetDB()
 	for port := startPort; port <= 65535; port++ {
 		var existingAddress AddressAssigned
@@ -35,6 +36,17 @@ func findNextAvailablePort(startPort int) int {
 		}
 	}
 	return 9000 // fallback port
+}
+
+// Check if endpoint exists
+func CheckIfEndpointExists(endpoint string, port int) (bool, error) {
+	db := GetDB()
+	var count int64
+	err := db.Model(&Server{}).Where("endpoint = ? AND port = ?", endpoint, port).Count(&count).Error
+	if err != nil {
+		return false, err
+	}
+	return count > 0, nil
 }
 
 // GetAllServers retrieves all server records from the database.
