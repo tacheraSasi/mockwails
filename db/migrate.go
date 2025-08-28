@@ -6,7 +6,7 @@ import (
 
 func AutoMigrate() {
 	db := GetDB()
-	err := db.AutoMigrate(&Server{}, &AddressAssigned{})
+	err := db.AutoMigrate(&Server{}, &AddressAssigned{}, &Settings{})
 	if err != nil {
 		log.Fatalf("AutoMigrate failed: %v", err)
 	}

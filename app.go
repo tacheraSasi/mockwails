@@ -220,3 +220,41 @@ func (a *App) StopServer(id uint) utils.Response {
 	mockserver.CheckStatus(*server)
 	return utils.Response{Success: true, Message: "Server stopped successfully", Data: server}
 }
+
+// GetSettings retrieves the current settings
+func (a *App) GetSettings() utils.Response {
+	settings, err := db.GetSettings()
+	if err != nil {
+		log.Println("Failed to get settings:", err)
+		return utils.Response{Success: false, Message: "Failed to get settings: " + err.Error()}
+	}
+	return utils.Response{Success: true, Message: "Settings retrieved successfully", Data: settings}
+}
+
+// UpdateSettings updates the application settings
+func (a *App) UpdateSettings(data map[string]interface{}) utils.Response {
+	var settings db.Settings
+	b, err := json.Marshal(data)
+	if err != nil {
+		log.Println("Failed to marshal settings data:", err)
+		return utils.Response{Success: false, Message: "Failed to update settings: " + err.Error()}
+	}
+	if err := json.Unmarshal(b, &settings); err != nil {
+		log.Println("Failed to unmarshal settings data:", err)
+		return utils.Response{Success: false, Message: "Failed to update settings: " + err.Error()}
+	}
+
+	// Validate port range
+	if settings.DefaultUnifiedPort < 1 || settings.DefaultUnifiedPort > 65535 {
+		return utils.Response{Success: false, Message: "Port must be between 1 and 65535"}
+	}
+
+	err = db.UpdateSettings(&settings)
+	if err != nil {
+		log.Println("Failed to update settings:", err)
+		return utils.Response{Success: false, Message: "Failed to update settings: " + err.Error()}
+	}
+	
+	log.Println("Settings updated:", settings)
+	return utils.Response{Success: true, Message: "Settings updated successfully", Data: settings}
+}

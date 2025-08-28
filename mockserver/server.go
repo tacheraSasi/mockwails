@@ -87,13 +87,32 @@ func serveMethodNotAllowed(w http.ResponseWriter, r *http.Request, endpoint stri
 // Start launches a mock HTTP server based on the Server struct details
 func Start(server db.Server) error {
 	port := server.AddressAssigned.Port
+	
+	// Check if we're in unified mode
+	isUnified, err := db.IsUnifiedMode()
+	if err != nil {
+		return fmt.Errorf("failed to check unified mode: %v", err)
+	}
+
+	if isUnified {
+		// Use shared server for unified mode
+		_, err := serverManager.GetOrCreateSharedServer(port)
+		if err != nil {
+			return fmt.Errorf("failed to get or create shared server: %v", err)
+		}
+		log.Printf("Added endpoint %s %s to shared server on port %d", server.Method, server.Endpoint, port)
+		return nil
+	}
+
+	// Dedicated mode - use original logic
 	endpoint := server.Endpoint
 	method := strings.ToUpper(server.Method)
 	responseStatus := server.ResponseStatus
 	responseHeaders := parseHeaders(server.ResponseHeaders)
 	responseBody := server.ResponseBody
 
-	if utils.IsPortInUse(port) {
+	// In dedicated mode, check if port is in use and not managed by us
+	if utils.IsPortInUse(port) && !serverManager.IsPortManaged(port) {
 		return fmt.Errorf("port %d is already in use", port)
 	}
 
@@ -128,7 +147,7 @@ func Start(server db.Server) error {
 
 	addr := ":" + strconv.Itoa(port)
 	go func() {
-		log.Printf("Starting mock server on %s%s", addr, endpoint)
+		log.Printf("Starting dedicated mock server on %s%s", addr, endpoint)
 		if err := http.ListenAndServe(addr, mux); err != nil {
 			log.Printf("Mock server stopped: %v", err)
 		}
@@ -161,7 +180,20 @@ func Stop(server db.Server) error {
 	if err != nil {
 		return err
 	}
-	//TODO: Stop a running mock server
+
+	// Check if we're in unified mode
+	isUnified, err := db.IsUnifiedMode()
+	if err != nil {
+		return fmt.Errorf("failed to check unified mode: %v", err)
+	}
+
+	if isUnified {
+		// For unified mode, try to stop the shared server if no more endpoints are using it
+		port := server.AddressAssigned.Port
+		return serverManager.StopServer(port)
+	}
+
+	//TODO: Stop a running dedicated mock server
 	return nil
 }
 
