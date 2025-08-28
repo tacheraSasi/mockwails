@@ -22,7 +22,7 @@ type NotFoundData struct {
 	AvailableEndpoints []db.Server
 }
 
-// serveCustom404 serves the custom 404 HTML page
+// serveCustom404 serves the custom 404 HTML page or json based on the method type
 func serveCustom404(w http.ResponseWriter, r *http.Request, endpoint string, port int) {
 	availableEndpoints, _ := db.GetAvailableEndpointsForPort(port)
 
@@ -41,6 +41,14 @@ func serveCustom404(w http.ResponseWriter, r *http.Request, endpoint string, por
 		AvailableEndpoints: availableEndpoints,
 	}
 
+	// We Serve JSON for non GET requests
+	if data.Method != http.MethodGet {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(data)
+		return
+	}
+
 	var buf bytes.Buffer
 	if err := tmpl.Execute(&buf, data); err != nil {
 		w.Header().Set("Content-Type", "text/plain")
@@ -53,6 +61,7 @@ func serveCustom404(w http.ResponseWriter, r *http.Request, endpoint string, por
 	w.WriteHeader(http.StatusNotFound)
 	w.Write(buf.Bytes())
 }
+
 
 // serveMethodNotAllowed serves a method not allowed response
 func serveMethodNotAllowed(w http.ResponseWriter, r *http.Request, endpoint string, port int, allowedMethod string) {
