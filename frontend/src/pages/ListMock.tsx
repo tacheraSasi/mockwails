@@ -190,15 +190,10 @@ const ListMock: React.FC = () => {
                   <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
                     <div>
                       <span className="font-medium">Endpoint:</span>
-                      <code className="ml-1 px-2 py-1 bg-muted rounded font-mono">
-                        <a
-                          href={`http://localhost:${endpoint.addressAssigned?.port}${endpoint.endpoint}`}
-                          onClick={() => {
+                      <code className="ml-1 px-2 py-1 bg-muted rounded font-mono cursor-pointer" title="Open in Browser" onClick={() => {
                             BrowserOpenURL(`http://localhost:${endpoint.addressAssigned?.port}${endpoint.endpoint}`);
-                          }}
-                        >
-                          {endpoint.endpoint}
-                        </a>
+                          }} >
+                            {endpoint.endpoint}
                       </code>
                     </div>
                     <div>
