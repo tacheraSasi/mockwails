@@ -16,7 +16,7 @@ type Config struct {
 func init(){
 	fmt.Println("Config initialized...")
 	once.Do(func(){
-		// TODO: Create a folder mockwails in the $HOME directory of the user
+		// TODO: I will Create a folder mockwails in the $HOME directory of the user
 	})
 }
 

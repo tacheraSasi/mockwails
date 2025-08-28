@@ -27,6 +27,9 @@ interface MockFormData {
   responseHeaders: string;
   responseBody: string;
   addressAssigned?: { port: number };
+  latency: number;
+  requestQuery: string;
+  status: string;
 }
 
 const CreateMock: React.FC = () => {
@@ -42,6 +45,9 @@ const CreateMock: React.FC = () => {
       responseHeaders: '{"Content-Type": "application/json"}',
       responseBody: '{"message": "Hello World"}',
       addressAssigned: { port: 8080 },
+      latency: 0,
+      requestQuery: "{}",
+      status: "active",
     },
   });
 
@@ -237,6 +243,53 @@ const CreateMock: React.FC = () => {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="latency"
+                render={({ field }) => (
+                  <FormItem className="mt-4">
+                    <FormLabel>Latency (ms)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="0"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(Number.parseInt(e.target.value))
+                        }
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      The simulated network latency in milliseconds
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem className="mt-4">
+                    <FormLabel>Status</FormLabel>
+                    <FormControl>
+                      <select
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        {...field}
+                      >
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                      </select>
+                    </FormControl>
+                    <FormDescription>
+                      The status of the mock endpoint
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </Card>
           </div>
 
@@ -282,6 +335,27 @@ const CreateMock: React.FC = () => {
                     </FormControl>
                     <FormDescription>
                       Expected structure of the request body
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="requestQuery"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Expected Request query (JSON)</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder='{"id": "123"}'
+                        className="min-h-[100px] font-mono text-sm"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Expected query in the request
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

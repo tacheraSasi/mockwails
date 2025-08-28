@@ -15,6 +15,8 @@ type Server struct {
 	ResponseStatus  int             `gorm:"type:int;not null" json:"responseStatus"`
 	ResponseHeaders string          `gorm:"type:text;not null" json:"responseHeaders"`
 	ResponseBody    string          `gorm:"type:text;not null" json:"responseBody"`
+	RequestQuery    string          `gorm:"type:text;not null" json:"requestQuery"`
+	Latency         uint            `gorm:"type:int;not null" json:"latency"`
 	Status          string          `gorm:"type:varchar(10);default:'inactive'" json:"status"`
 
 	// One-to-one relation
