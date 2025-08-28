@@ -3,14 +3,16 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Edit, Play, Search, Square, Trash2 } from "lucide-react";
 import type React from "react";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { GetAllServers, StartServer } from "../../wailsjs/go/main/App";
 import { db } from "../../wailsjs/go/models";
 import { formattedTime, getMethodColor } from "@/lib/utils";
+import { useNavigation } from "@/contexts/NavigationContext";
 
 
 const ListMock: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const { setCurrentPage } = useNavigation();
   const [endpoints, setEndpoints] = useState<db.Server[]>([]);
 
   useEffect(() => {
@@ -96,7 +98,7 @@ const ListMock: React.FC = () => {
                 : "No mock endpoints created yet."}
             </div>
             {!searchTerm && (
-              <Button className="mt-4" variant="outline">
+              <Button className="mt-4" variant="outline" onClick={() => setCurrentPage("create-mock")}>
                 Create Your First Mock
               </Button>
             )}
