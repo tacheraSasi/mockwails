@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Edit, Play, Search, Square, Trash2 } from "lucide-react";
+import { Edit, Play, Search, Square, Trash2, Globe } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
 import {
@@ -15,11 +15,13 @@ import { BrowserOpenURL } from "../../wailsjs/runtime";
 import { db } from "../../wailsjs/go/models";
 import { formattedTime, getMethodColor } from "@/lib/utils";
 import { useNavigation } from "@/contexts/NavigationContext";
+import { useSettings } from "@/contexts/SettingsContext";
 import { toast } from "sonner";
 
 const ListMock: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const { setCurrentPage } = useNavigation();
+  const { settings } = useSettings();
   const [endpoints, setEndpoints] = useState<db.Server[]>([]);
 
   const fetchData = async () => {
@@ -30,6 +32,25 @@ const ListMock: React.FC = () => {
       console.error("Failed to fetch servers:", error);
       toast("Failed to fetch servers");
     }
+  };
+
+  const isEndpointUnified = (endpoint: db.Server) => {
+    // If settings allow dedicated ports, check if this endpoint is using the unified port
+    if (settings?.allowDedicatedPorts) {
+      return endpoint.addressAssigned?.port === settings.defaultUnifiedPort;
+    }
+    // If dedicated ports are not allowed, all endpoints are unified
+    return true;
+  };
+
+  const getPortDisplay = (endpoint: db.Server) => {
+    const port = endpoint.addressAssigned?.port || 8080;
+    const isUnified = isEndpointUnified(endpoint);
+    return {
+      port,
+      isUnified,
+      display: isUnified ? `${port} (Unified)` : `${port} (Dedicated)`
+    };
   };
 
   useEffect(() => {
@@ -195,6 +216,30 @@ const ListMock: React.FC = () => {
                           }} >
                             {endpoint.endpoint}
                       </code>
+                    </div>
+                    <div>
+                      <span className="font-medium">Port:</span>
+                      <span className="ml-1 font-mono text-xs">
+                        {(() => {
+                          const portInfo = getPortDisplay(endpoint);
+                          return (
+                            <span className="flex items-center gap-1">
+                              {portInfo.port}
+                              <Badge 
+                                variant="outline" 
+                                className={`text-xs h-4 ${
+                                  portInfo.isUnified 
+                                    ? "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300" 
+                                    : "bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-950 dark:text-orange-300"
+                                }`}
+                              >
+                                <Globe className="h-2 w-2 mr-1" />
+                                {portInfo.isUnified ? "Unified" : "Dedicated"}
+                              </Badge>
+                            </span>
+                          );
+                        })()}
+                      </span>
                     </div>
                     <div>
                       <span className="font-medium">Status Code:</span>{" "}
