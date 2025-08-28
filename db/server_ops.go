@@ -1,7 +1,5 @@
 package db
 
-
-
 // CreateServer inserts a new server record into the database.
 func CreateServer(server *Server) error {
 	db := GetDB()
@@ -42,11 +40,25 @@ func findNextAvailablePort(startPort int) int {
 func CheckIfEndpointExists(endpoint string, port int) (bool, error) {
 	db := GetDB()
 	var count int64
-	err := db.Model(&Server{}).Where("endpoint = ? AND port = ?", endpoint, port).Count(&count).Error
+	err := db.Model(&Server{}).
+		Joins("JOIN address_assigned ON servers.id = address_assigned.server_id").
+		Where("servers.endpoint = ? AND address_assigned.port = ? AND servers.status = ?", endpoint, port, "active").
+		Count(&count).Error
 	if err != nil {
 		return false, err
 	}
 	return count > 0, nil
+}
+
+// GetAvailableEndpointsForPort returns all active endpoints for a specific port
+func GetAvailableEndpointsForPort(port int) ([]Server, error) {
+	db := GetDB()
+	var servers []Server
+	err := db.Preload("AddressAssigned").
+		Joins("JOIN address_assigned ON servers.id = address_assigned.server_id").
+		Where("address_assigned.port = ? AND servers.status = ?", port, "active").
+		Find(&servers).Error
+	return servers, err
 }
 
 // GetAllServers retrieves all server records from the database.

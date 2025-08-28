@@ -1,8 +1,10 @@
 package mockserver
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"strconv"
@@ -11,6 +13,67 @@ import (
 	"github.com/tacheraSasi/mockwails/db"
 	"github.com/tacheraSasi/mockwails/utils"
 )
+
+// NotFoundData holds the template data for the 404 page
+type NotFoundData struct {
+	Method             string
+	Endpoint           string
+	Port               int
+	AvailableEndpoints []db.Server
+}
+
+// serveCustom404 serves the custom 404 HTML page
+func serveCustom404(w http.ResponseWriter, r *http.Request, endpoint string, port int) {
+	availableEndpoints, _ := db.GetAvailableEndpointsForPort(port)
+
+	tmpl, err := template.New("404").Parse(custom404HTML)
+	if err != nil {
+		w.Header().Set("Content-Type", "text/plain")
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("404 - Endpoint Not Found"))
+		return
+	}
+
+	data := NotFoundData{
+		Method:             r.Method,
+		Endpoint:           endpoint,
+		Port:               port,
+		AvailableEndpoints: availableEndpoints,
+	}
+
+	var buf bytes.Buffer
+	if err := tmpl.Execute(&buf, data); err != nil {
+		w.Header().Set("Content-Type", "text/plain")
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("404 - Endpoint Not Found"))
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(http.StatusNotFound)
+	w.Write(buf.Bytes())
+}
+
+// serveMethodNotAllowed serves a method not allowed response
+func serveMethodNotAllowed(w http.ResponseWriter, r *http.Request, endpoint string, port int, allowedMethod string) {
+	w.Header().Set("Allow", allowedMethod)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusMethodNotAllowed)
+
+	response := map[string]interface{}{
+		"error":   "Method Not Allowed",
+		"message": fmt.Sprintf("The endpoint %s only accepts %s requests", endpoint, allowedMethod),
+		"details": map[string]interface{}{
+			"requested_method": r.Method,
+			"allowed_method":   allowedMethod,
+			"endpoint":         endpoint,
+			"port":             port,
+		},
+	}
+
+	jsonResponse, _ := json.Marshal(response)
+	w.Write(jsonResponse)
+}
 
 // Start launches a mock HTTP server based on the Server struct details
 func Start(server db.Server) error {
@@ -26,22 +89,32 @@ func Start(server db.Server) error {
 	}
 
 	mux := http.NewServeMux()
-	mux.HandleFunc(endpoint, func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != method {
-			http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+
+	// Create a catch-all handler that checks for configured endpoints
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == endpoint {
+			if r.Method != method {
+				serveMethodNotAllowed(w, r, endpoint, port, method)
+				return
+			}
+
+			// Check if endpoint exists and is active
+			if exists, _ := db.CheckIfEndpointExists(endpoint, port); !exists {
+				serveCustom404(w, r, endpoint, port)
+				return
+			}
+
+			// This is our configured endpoint with correct method, handle it normally
+			for k, v := range responseHeaders {
+				w.Header().Set(k, v)
+			}
+			w.WriteHeader(responseStatus)
+			w.Write([]byte(responseBody))
 			return
 		}
-		if exists, _ := db.CheckIfEndpointExists(endpoint, port); !exists {
-			http.Error(w, "Endpoint Not Found", http.StatusNotFound)
-			w.WriteHeader(http.StatusNotFound)
-			//TODO: I will show here a custom not found page
-			return
-		}
-		for k, v := range responseHeaders {
-			w.Header().Set(k, v)
-		}
-		w.WriteHeader(responseStatus)
-		w.Write([]byte(responseBody))
+
+		// For any other path, we serve custom 404
+		serveCustom404(w, r, r.URL.Path, port)
 	})
 
 	addr := ":" + strconv.Itoa(port)
@@ -59,10 +132,10 @@ func Start(server db.Server) error {
 func parseHeaders(headerStr string) map[string]string {
 	headers := make(map[string]string)
 	if strings.HasPrefix(headerStr, "{") {
-		// Try JSON
+		//  JSON
 		_ = json.Unmarshal([]byte(headerStr), &headers)
 	} else {
-		// Try key:value\nkey:value
+		//  key:value\nkey:value
 		lines := strings.Split(headerStr, "\n")
 		for _, line := range lines {
 			parts := strings.SplitN(line, ":", 2)
