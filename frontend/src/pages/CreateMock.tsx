@@ -14,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import type React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { CreateServer, GetAllServers } from "../../wailsjs/go/main/App";
+import { CreateServer } from "../../wailsjs/go/main/App";
 
 interface MockFormData {
   name: string;
@@ -56,7 +56,7 @@ const CreateMock: React.FC = () => {
       console.log("Mock data:", data);
       const response = await CreateServer(data);
       console.log("Create server response:", response);
-      
+
       if (response.success) {
         toast("Mock created successfully!");
         form.reset(); // Reset form on success

@@ -49,7 +49,6 @@ func (a *App) startup(ctx context.Context) {
 
 func (a *App) shutdown(ctx context.Context) {
 	fmt.Println("App shutting down...")
-	//TODO: Here i should stop all the servers from the db where status is active
 	servers, err := db.GetAllActiveServers()
 	if err != nil {
 		fmt.Println("Failed to get active servers:", err)
@@ -80,10 +79,10 @@ func (a *App) CreateServer(data map[string]interface{}) utils.Response {
 		log.Println("Failed to unmarshal server data:", err)
 		return utils.Response{Success: false, Message: "Failed to create server: " + err.Error()}
 	}
-	
+
 	// Set the server status to inactive initially
 	server.Status = "inactive"
-	
+
 	err = db.CreateServer(&server)
 	if err != nil {
 		log.Println("Failed to create server:", err)
@@ -98,7 +97,7 @@ func (a *App) CreateServer(data map[string]interface{}) utils.Response {
 		log.Println("Failed to start server:", startResponse.Message)
 		return utils.Response{Success: false, Message: "Server created but failed to start: " + startResponse.Message}
 	}
-	
+
 	log.Println("SERVER started:", server.Name)
 	return utils.Response{Success: true, Message: "Server created and started successfully", Data: server}
 }
@@ -157,7 +156,7 @@ func (a *App) DeleteServer(id uint) utils.Response {
 		log.Println("Failed to get server:", err)
 		return utils.Response{Success: false, Message: "Failed to get server: " + err.Error()}
 	}
-	
+
 	if server.Status == "active" {
 		stopResponse := a.StopServer(id)
 		if !stopResponse.Success {
@@ -165,7 +164,7 @@ func (a *App) DeleteServer(id uint) utils.Response {
 			return utils.Response{Success: false, Message: "Failed to stop server before deletion: " + stopResponse.Message}
 		}
 	}
-	
+
 	err = db.DeleteServer(id)
 	if err != nil {
 		log.Println("Failed to delete server:", err)
@@ -183,14 +182,14 @@ func (a *App) StartServer(id uint) utils.Response {
 		return utils.Response{Success: false, Message: "Failed to get server: " + err.Error()}
 	}
 	log.Println("StartServer called for server:", server)
-	
+
 	if server.Status == "inactive" {
 		err = db.ToggleServerStatus(server.ID)
 		if err != nil {
 			return utils.Response{Success: false, Message: "Failed to toggle server status: " + err.Error()}
 		}
 	}
-	
+
 	mockserver.CheckStatus(*server)
 	err = mockserver.Start(*server)
 	if err != nil {
@@ -200,7 +199,7 @@ func (a *App) StartServer(id uint) utils.Response {
 		}
 		return utils.Response{Success: false, Message: "Failed to start mock server: " + err.Error()}
 	}
-	
+
 	return utils.Response{Success: true, Message: "Server started successfully", Data: server}
 }
 
@@ -211,13 +210,13 @@ func (a *App) StopServer(id uint) utils.Response {
 		return utils.Response{Success: false, Message: "Failed to get server: " + err.Error()}
 	}
 	log.Println("StopServer called for server:", server)
-	
+
 	err = mockserver.Stop(*server)
 	if err != nil {
 		log.Println("Failed to stop server:", err)
 		return utils.Response{Success: false, Message: "Failed to stop server: " + err.Error()}
 	}
-	
+
 	mockserver.CheckStatus(*server)
 	return utils.Response{Success: true, Message: "Server stopped successfully", Data: server}
 }

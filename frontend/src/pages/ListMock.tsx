@@ -5,7 +5,12 @@ import { Badge } from "@/components/ui/badge";
 import { Edit, Play, Search, Square, Trash2 } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
-import { GetAllServers, StartServer, StopServer, DeleteServer } from "../../wailsjs/go/main/App";
+import {
+  GetAllServers,
+  StartServer,
+  StopServer,
+  DeleteServer,
+} from "../../wailsjs/go/main/App";
 import { db } from "../../wailsjs/go/models";
 import { formattedTime, getMethodColor } from "@/lib/utils";
 import { useNavigation } from "@/contexts/NavigationContext";
@@ -34,26 +39,30 @@ const ListMock: React.FC = () => {
     (endpoint) =>
       endpoint.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       endpoint.endpoint.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      endpoint.description.toLowerCase().includes(searchTerm.toLowerCase()),
+      endpoint.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const toggleStatus = async (id: number) => {
     try {
-      const endpoint = endpoints.find(e => e.id === id);
+      const endpoint = endpoints.find((e) => e.id === id);
       if (!endpoint) return;
-      
+
       let response;
       if (endpoint.status === "active") {
         response = await StopServer(id);
       } else {
         response = await StartServer(id);
       }
-      
+
       if (response.success) {
         toast(response.message);
         await fetchData(); // Refresh the list
       } else {
-        toast(`Failed to ${endpoint.status === "active" ? "stop" : "start"} server: ${response.message}`);
+        toast(
+          `Failed to ${
+            endpoint.status === "active" ? "stop" : "start"
+          } server: ${response.message}`
+        );
       }
     } catch (error) {
       console.error("Error toggling server status:", error);
@@ -96,9 +105,12 @@ const ListMock: React.FC = () => {
     <div className="w-full max-w-6xl mx-auto p-6">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-foreground mb-2">Mock Endpoints</h1>
+        <h1 className="text-3xl font-bold text-foreground mb-2">
+          Mock Endpoints
+        </h1>
         <p className="text-muted-foreground text-sm">
-          Manage your mock API endpoints. You can enable, disable, edit, or delete existing mocks.
+          Manage your mock API endpoints. You can enable, disable, edit, or
+          delete existing mocks.
         </p>
       </div>
 

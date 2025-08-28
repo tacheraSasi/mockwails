@@ -6,9 +6,9 @@ import (
 )
 
 type Response struct {
-    Success bool        `json:"success"`
-    Message string      `json:"message"`
-    Data    interface{} `json:"data,omitempty"`
+	Success bool        `json:"success"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data,omitempty"`
 }
 
 func IsPortInUse(port int) bool {

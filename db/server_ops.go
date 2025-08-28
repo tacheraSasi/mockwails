@@ -3,7 +3,7 @@ package db
 // SeedServers creates initial seed servers if they do not already exist (no duplicates by Name).
 func SeedServers() error {
 	db := GetDB()
-	
+
 	// Fix existing servers that don't have AddressAssigned
 	var serversWithoutAddress []Server
 	err := db.Where("id NOT IN (SELECT server_id FROM address_assigned)").Find(&serversWithoutAddress).Error
@@ -17,7 +17,7 @@ func SeedServers() error {
 			db.Create(&addressAssigned)
 		}
 	}
-	
+
 	seedData := []Server{
 		{
 			Name:            "Sample User API",
@@ -122,14 +122,14 @@ func SeedServers() error {
 // CreateServer inserts a new server record into the database.
 func CreateServer(server *Server) error {
 	db := GetDB()
-	
+
 	var existingAddress AddressAssigned
 	err := db.Where("port = ?", server.AddressAssigned.Port).First(&existingAddress).Error
 	if err == nil {
 		// Port is already assigned, find next available port
 		server.AddressAssigned.Port = findNextAvailablePort(server.AddressAssigned.Port)
 	}
-	
+
 	return db.Create(server).Error
 }
 
