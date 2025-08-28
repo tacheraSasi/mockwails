@@ -21,7 +21,6 @@ func Start(server db.Server) error {
 	responseHeaders := parseHeaders(server.ResponseHeaders)
 	responseBody := server.ResponseBody
 
-	// Check if port is already in use
 	if utils.IsPortInUse(port) {
 		return fmt.Errorf("port %d is already in use", port)
 	}
