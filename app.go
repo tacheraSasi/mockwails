@@ -57,7 +57,6 @@ func (a *App) CreateServer(data map[string]interface{}) utils.Response {
 		log.Println("Failed to unmarshal server data:", err)
 		return utils.Response{Success: false, Message: "Failed to create server: " + err.Error()}
 	}
-	log.Println("Unmarshaled server data:", server)
 	err = db.CreateServer(&server)
 	if err != nil {
 		log.Println("Failed to create server:", err)

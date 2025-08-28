@@ -27,6 +27,8 @@ export namespace db {
 	    responseStatus: number;
 	    responseHeaders: string;
 	    responseBody: string;
+	    requestQuery: string;
+	    latency: number;
 	    status: string;
 	    addressAssigned: AddressAssigned;
 	    // Go type: time
@@ -50,6 +52,8 @@ export namespace db {
 	        this.responseStatus = source["responseStatus"];
 	        this.responseHeaders = source["responseHeaders"];
 	        this.responseBody = source["responseBody"];
+	        this.requestQuery = source["requestQuery"];
+	        this.latency = source["latency"];
 	        this.status = source["status"];
 	        this.addressAssigned = this.convertValues(source["addressAssigned"], AddressAssigned);
 	        this.createdAt = this.convertValues(source["createdAt"], null);
