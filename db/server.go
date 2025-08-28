@@ -33,7 +33,7 @@ func (Server) TableName() string {
 type AddressAssigned struct {
 	ID       uint    `gorm:"primaryKey;autoIncrement" json:"id"`
 	ServerID uint    `gorm:"uniqueIndex;not null" json:"serverId"` // one-to-one with Server
-	Port     int     `gorm:"uniqueIndex;not null" json:"port"`     // unique port assigned
+	Port     int     `gorm:"not null" json:"port"`                 // port assigned (can be shared in unified mode)
 	Server   *Server `gorm:"foreignKey:ServerID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"-"`
 }
 
