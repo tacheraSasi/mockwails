@@ -11,6 +11,8 @@ export function GetAllServers():Promise<Array<db.Server>>;
 
 export function GetServerByID(arg1:number):Promise<db.Server>;
 
+export function GetSettings():Promise<utils.Response>;
+
 export function Greet(arg1:string):Promise<string>;
 
 export function StartServer(arg1:number):Promise<utils.Response>;
@@ -18,3 +20,5 @@ export function StartServer(arg1:number):Promise<utils.Response>;
 export function StopServer(arg1:number):Promise<utils.Response>;
 
 export function UpdateServer(arg1:Record<string, any>):Promise<utils.Response>;
+
+export function UpdateSettings(arg1:Record<string, any>):Promise<utils.Response>;

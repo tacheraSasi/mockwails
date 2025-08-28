@@ -1,14 +1,41 @@
 package db
 
+import "fmt"
+
 // CreateServer inserts a new server record into the database.
 func CreateServer(server *Server) error {
 	db := GetDB()
 
-	var existingAddress AddressAssigned
-	err := db.Where("port = ?", server.AddressAssigned.Port).First(&existingAddress).Error
-	if err == nil {
-		// Port is already assigned, find next available port
-		server.AddressAssigned.Port = findNextAvailablePort(server.AddressAssigned.Port)
+	// Check if we're in unified mode
+	isUnified, err := IsUnifiedMode()
+	if err != nil {
+		return err
+	}
+
+	if isUnified {
+		// Use unified port
+		unifiedPort, err := GetUnifiedPort()
+		if err != nil {
+			return err
+		}
+		server.AddressAssigned.Port = unifiedPort
+
+		// Check for endpoint conflicts on the unified port
+		exists, err := CheckIfEndpointMethodExists(server.Endpoint, server.Method, unifiedPort)
+		if err != nil {
+			return err
+		}
+		if exists {
+			return fmt.Errorf("endpoint %s with method %s already exists on port %d", server.Endpoint, server.Method, unifiedPort)
+		}
+	} else {
+		// Use dedicated port logic (existing behavior)
+		var existingAddress AddressAssigned
+		err := db.Where("port = ?", server.AddressAssigned.Port).First(&existingAddress).Error
+		if err == nil {
+			// Port is already assigned, find next available port
+			server.AddressAssigned.Port = findNextAvailablePort(server.AddressAssigned.Port)
+		}
 	}
 
 	return db.Create(server).Error
@@ -36,13 +63,27 @@ func findNextAvailablePort(startPort int) int {
 	return 9000 // fallback port
 }
 
-// Check if endpoint exists
+// Check if endpoint exists (legacy function for compatibility)
 func CheckIfEndpointExists(endpoint string, port int) (bool, error) {
 	db := GetDB()
 	var count int64
 	err := db.Model(&Server{}).
 		Joins("JOIN address_assigned ON servers.id = address_assigned.server_id").
 		Where("servers.endpoint = ? AND address_assigned.port = ? AND servers.status = ?", endpoint, port, "active").
+		Count(&count).Error
+	if err != nil {
+		return false, err
+	}
+	return count > 0, nil
+}
+
+// CheckIfEndpointMethodExists checks if endpoint with specific method exists on a port
+func CheckIfEndpointMethodExists(endpoint string, method string, port int) (bool, error) {
+	db := GetDB()
+	var count int64
+	err := db.Model(&Server{}).
+		Joins("JOIN address_assigned ON servers.id = address_assigned.server_id").
+		Where("servers.endpoint = ? AND servers.method = ? AND address_assigned.port = ? AND servers.status = ?", endpoint, method, port, "active").
 		Count(&count).Error
 	if err != nil {
 		return false, err

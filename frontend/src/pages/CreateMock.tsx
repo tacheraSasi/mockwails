@@ -11,10 +11,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import type React from "react";
+import { Badge } from "@/components/ui/badge";
+import { Info } from "lucide-react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { CreateServer } from "../../wailsjs/go/main/App";
+import { useSettings } from "@/contexts/SettingsContext";
 
 interface MockFormData {
   name: string;
@@ -33,6 +36,7 @@ interface MockFormData {
 }
 
 const CreateMock: React.FC = () => {
+  const { settings, loading: settingsLoading } = useSettings();
   const form = useForm<MockFormData>({
     defaultValues: {
       name: "",
@@ -44,12 +48,19 @@ const CreateMock: React.FC = () => {
       responseStatus: 200,
       responseHeaders: '{"Content-Type": "application/json"}',
       responseBody: '{"message": "Hello World"}',
-      addressAssigned: { port: 8080 },
+      addressAssigned: { port: settings?.defaultUnifiedPort || 8080 },
       latency: 0,
       requestQuery: "{}",
       status: "active",
     },
   });
+
+  // Update port when settings change
+  React.useEffect(() => {
+    if (settings && !settings.allowDedicatedPorts) {
+      form.setValue("addressAssigned.port", settings.defaultUnifiedPort);
+    }
+  }, [settings, form]);
 
   const onSubmit = async (data: MockFormData) => {
     try {
@@ -125,21 +136,42 @@ const CreateMock: React.FC = () => {
                 control={form.control}
                 name="addressAssigned.port"
                 render={({ field }) => {
+                  const isUnifiedMode = !settings?.allowDedicatedPorts;
+                  const unifiedPort = settings?.defaultUnifiedPort || 8080;
+                  
                   return (
                     <FormItem>
                       <FormLabel>PORT</FormLabel>
                       <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="e.g., 8080"
-                          value={field.value}
-                          onChange={(e) =>
-                            field.onChange(Number(e.target.value))
-                          }
-                        />
+                        {isUnifiedMode ? (
+                          <div className="flex items-center space-x-2">
+                            <Input
+                              type="number"
+                              value={unifiedPort}
+                              disabled
+                              className="flex-1"
+                            />
+                            <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                              <Info className="h-3 w-3 mr-1" />
+                              Unified
+                            </Badge>
+                          </div>
+                        ) : (
+                          <Input
+                            type="number"
+                            placeholder="e.g., 8080"
+                            value={field.value}
+                            onChange={(e) =>
+                              field.onChange(Number(e.target.value))
+                            }
+                          />
+                        )}
                       </FormControl>
                       <FormDescription>
-                        The port that the server will listen on
+                        {isUnifiedMode 
+                          ? "All mock endpoints share this unified port with different paths"
+                          : "The dedicated port that this server will listen on"
+                        }
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
