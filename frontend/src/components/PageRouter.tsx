@@ -1,6 +1,7 @@
 import { useNavigation } from "@/contexts/NavigationContext";
 import CreateMock from "@/pages/CreateMock";
 import ListMock from "@/pages/ListMock";
+import RequestInspector from "@/pages/RequestInspector";
 import type React from "react";
 
 const PageRouter: React.FC = () => {
@@ -11,6 +12,8 @@ const PageRouter: React.FC = () => {
       return <CreateMock />;
     case "list-mock":
       return <ListMock />;
+    case "request-inspector":
+      return <RequestInspector />;
     case "settings":
       return (
         <div className="w-full max-w-4xl mx-auto p-6">

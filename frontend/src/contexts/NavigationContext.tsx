@@ -1,7 +1,7 @@
 import type React from "react";
 import { createContext, useContext, useState } from "react";
 
-type Page = "create-mock" | "list-mock" | "settings";
+type Page = "create-mock" | "list-mock" | "settings" | "request-inspector";
 
 interface NavigationContextType {
   currentPage: Page;
