@@ -1,27 +1,33 @@
-# README
+# MockWails
 
 ## About
 
-**A modern Wails desktop app template** featuring a modern stack:
-- **React** for UI
-- **TypeScript** for type safety
-- **Shadcn UI** for accessible, themeable components
-- **Biome** for code formatting and linting
-- **Wails** for desktop app development
-- **Go** for backend
+**MockWails** is a desktop application for creating and managing mock HTTP servers. It's built with **Wails**, using **Go** for the backend and a modern frontend stack.
+
+The application allows you to define mock servers with specific endpoints, HTTP methods, response statuses, headers, and bodies. These servers are persisted in a local SQLite database and can be started and stopped from the UI. Active servers are automatically restarted when the application launches.
+
+## Features
+
+- **Create and Manage Mock Servers**: Easily create, edit, and delete mock servers.
+- **Customizable Responses**: Configure the endpoint, HTTP method, status code, headers, and body for each mock server.
+- **Persistent Storage**: Mock server configurations are saved to a local SQLite database.
+- **Automatic Restart**: Active servers are automatically restarted when the application starts.
+- **Easy to Use UI**: A clean and intuitive user interface for managing your mock servers.
 
 https://github.com/user-attachments/assets/3ca52ea6-9049-45bb-85b4-08715b96e1b3
 
+*Note: The screenshot above is from the initial template and does not reflect the current application.*
+
 </br>
 
+## Tech Stack
 
-
-
-
-Wails is a framework for building desktop applications using Go for the backend and modern web technologies for the frontend. It enables you to create fast, native-feeling desktop apps with a seamless bridge between Go and JavaScript/TypeScript. Check official docs for more info: https://wails.io/docs/introduction
-
-You can configure the project by editing `wails.json`. More information about the project settings can be found
-here: https://wails.io/docs/reference/project-config
+- **Go** for the backend
+- **Wails** for desktop app development
+- **React** for the UI
+- **TypeScript** for type safety
+- **Shadcn UI** for accessible, themeable components
+- **Biome** for code formatting and linting
 
 ## Live Development
 
@@ -40,57 +46,6 @@ This will start the app with hot reload for both frontend and backend. For front
 ## Building
 
 To build a redistributable, production mode package, use `make build-[os]`, where `os` is one of `windows`, `linux`, or `mac`.
-
-## Key Frontend Libraries
-
-This project utilizes a modern frontend stack:
-
-- [**React**](https://react.dev/): A JavaScript library for building user interfaces.
-- [**TypeScript**](https://www.typescriptlang.org/): A typed superset of JavaScript that compiles to plain JavaScript.
-- [**Vite**](https://vitejs.dev/): A fast build tool and development server.
-- [**Tailwind CSS**](https://tailwindcss.com/): A utility-first CSS framework for rapid UI development.
-- [**Shadcn UI**](https://ui.shadcn.com/): A collection of re-usable UI components built with Radix UI and Tailwind CSS.
-- [**Biome**](https://biomejs.dev/): A fast formatter and linter for web projects.
-- [**Radix UI**](https://www.radix-ui.com/): Primitives for building accessible design systems and web applications.
-
-### Common Shadcn UI Commands
-
-Use the following commands (from the `frontend` directory) to add new Shadcn UI components:
-
-```sh
-npx shadcn-ui@latest add button
-npx shadcn-ui@latest add input
-npx shadcn-ui@latest add card
-# ...add any other supported component
-```
-
-See the [Shadcn UI documentation](https://ui.shadcn.com/docs/components) for a full list of available components and usage instructions.
-
-## Library Versions
-
-Below are the main library versions currently in use:
-
-| Library                          | Version    |
-| -------------------------------- | ---------- |
-| react                            | ^18.3.1    |
-| react-dom                        | ^18.3.1    |
-| typescript                       | ^5.8.3     |
-| vite                             | ^6.3.5     |
-| @vitejs/plugin-react             | ^4.5.0     |
-| tailwindcss                      | ^4.1.8     |
-| @tailwindcss/vite                | ^4.1.8     |
-| tw-animate-css                   | ^1.3.3     |
-| class-variance-authority         | ^0.7.1     |
-| clsx                             | ^2.1.1     |
-| tailwind-merge                   | ^3.3.0     |
-| @radix-ui/react-aspect-ratio     | ^1.1.7     |
-| @radix-ui/react-dropdown-menu    | ^2.1.15    |
-| @radix-ui/react-slot             | ^1.2.3     |
-| lucide-react                     | ^0.511.0   |
-| next-themes                      | ^0.4.6     |
-| sonner                           | ^2.0.5     |
-| @biomejs/biome                   | ^1.9.4     |
-
 
 ## Makefile Commands
 
