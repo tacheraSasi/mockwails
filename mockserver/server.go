@@ -31,6 +31,12 @@ func Start(server db.Server) error {
 			http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 			return
 		}
+		if exists, _ := db.CheckIfEndpointExists(endpoint, port); !exists {
+			http.Error(w, "Endpoint Not Found", http.StatusNotFound)
+			w.WriteHeader(http.StatusNotFound)
+			//TODO: I will show here a custom not found page
+			return
+		}
 		for k, v := range responseHeaders {
 			w.Header().Set(k, v)
 		}
