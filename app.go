@@ -24,9 +24,14 @@ func NewApp() *App {
 // startup is called when the app starts. The context is saved
 // so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
+	fmt.Println("Seeding servers...")
+	if err := db.SeedServers(); err != nil {
+		fmt.Println("Failed to seed servers:", err)
+		return
+	}
 	fmt.Println("App started...")
 	//TODO: Here i should start all the servers from the db where status is active
-	//Meaning they where not stoped but the app was deleted
+	//Meaning they where not stoped but the app was shutdown
 	//TODO: In the future i will add a column auto-start for specifically this use
 	servers, err := db.GetAllActiveServers()
 	if err != nil {
