@@ -1,5 +1,38 @@
 package db
 
+// SeedServers creates initial seed servers if they do not already exist (no duplicates by Name).
+func SeedServers() error {
+	db := GetDB()
+	seedData := []Server{
+		{
+			Name:           "Sample User API",
+			Endpoint:       "/api/users",
+			Method:         "GET",
+			Description:    "Returns a list of users",
+			ResponseStatus: 200,
+			Status:         "inactive",
+		},
+		{
+			Name:           "Sample Product API",
+			Endpoint:       "/api/products",
+			Method:         "POST",
+			Description:    "Creates a new product",
+			ResponseStatus: 201,
+			Status:         "inactive",
+		},
+	}
+	for _, s := range seedData {
+		var count int64
+		db.Model(&Server{}).Where("name = ? OR endpoint = ?", s.Name, s.Endpoint).Count(&count)
+		if count == 0 {
+			if err := db.Create(&s).Error; err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 // CreateServer inserts a new server record into the database.
 func CreateServer(server *Server) error {
 	db := GetDB()
