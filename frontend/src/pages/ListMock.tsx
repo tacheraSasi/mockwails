@@ -6,6 +6,7 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { GetAllServers } from "../../wailsjs/go/main/App";
 import { db } from "../../wailsjs/go/models";
+import { getMethodColor } from "@/lib/utils";
 
 
 const ListMock: React.FC = () => {
@@ -43,22 +44,7 @@ const ListMock: React.FC = () => {
     setEndpoints(endpoints.filter((endpoint) => endpoint.id !== id));
   };
 
-  const getMethodColor = (method: string) => {
-    switch (method) {
-      case "GET":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
-      case "POST":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
-      case "PUT":
-        return "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200";
-      case "DELETE":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
-      case "PATCH":
-        return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200";
-      default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
-    }
-  };
+
 
   return (
     <div className="w-full max-w-6xl mx-auto p-6">
