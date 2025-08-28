@@ -18,6 +18,10 @@ export function GetServerByID(arg1) {
   return window['go']['main']['App']['GetServerByID'](arg1);
 }
 
+export function GetSettings() {
+  return window['go']['main']['App']['GetSettings']();
+}
+
 export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
 }
@@ -32,4 +36,8 @@ export function StopServer(arg1) {
 
 export function UpdateServer(arg1) {
   return window['go']['main']['App']['UpdateServer'](arg1);
+}
+
+export function UpdateSettings(arg1) {
+  return window['go']['main']['App']['UpdateSettings'](arg1);
 }
