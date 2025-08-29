@@ -14,9 +14,23 @@ The application allows you to define mock servers with specific endpoints, HTTP 
 - **Automatic Restart**: Active servers are automatically restarted when the application starts.
 - **Easy to Use UI**: A clean and intuitive user interface for managing your mock servers.
 
-https://github.com/user-attachments/assets/3ca52ea6-9049-45bb-85b4-08715b96e1b3
+## Screenshots
 
-*Note: The screenshot above is from the initial template and does not reflect the current application.*
+<div align="center">
+
+### Main Interface
+![MockWails Main Interface](./assets/img1.png)
+
+### Mock Server Creation
+![Create Mock Server](./assets/img2.png)
+
+### Server Management
+![Server Management](./assets/img3.png)
+
+### Settings & Configuration
+![Settings](./assets/img4.png)
+
+</div>
 
 </br>
 
