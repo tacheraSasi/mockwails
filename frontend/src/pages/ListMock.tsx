@@ -212,7 +212,7 @@ const ListMock: React.FC = () => {
                     <div>
                       <span className="font-medium">Endpoint:</span>
                       <code className="ml-1 px-2 py-1 bg-muted rounded font-mono cursor-pointer" title="Open in Browser" onClick={() => {
-                            BrowserOpenURL(`http://localhost:${endpoint.addressAssigned?.port}${endpoint.endpoint}`);
+                            BrowserOpenURL(`http://localhost:${getPortDisplay(endpoint).port}${endpoint.endpoint}`);
                           }} >
                             {endpoint.endpoint}
                       </code>

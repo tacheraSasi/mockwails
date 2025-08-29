@@ -113,7 +113,7 @@ const custom404HTML = `<!DOCTYPE html>
       </ul>
     </div>
 
-    <p class="muted">MockWails Created by <a href="https://github.com/tacheraSasi">tacheraSasi</a></p>
+    <p class="muted">MockWails Created by <a href="https://github.com/tacheraSasi" target="_blank">tacheraSasi</a></p>
   </div>
 </body>
 </html>`
