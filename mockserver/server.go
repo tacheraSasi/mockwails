@@ -111,14 +111,14 @@ func Start(server db.Server) error {
 	responseHeaders := parseHeaders(server.ResponseHeaders)
 	responseBody := server.ResponseBody
 
-	// NOTE:In dedicated mode, check if port is in use and not managed by us
+	// NOTE:In dedicated mode, we check if port is in use and not managed by us
 	if utils.IsPortInUse(port) && !serverManager.IsPortManaged(port) {
 		return fmt.Errorf("port %d is already in use", port)
 	}
 
 	mux := http.NewServeMux()
 
-	// catch-all handler that checks for configured endpoints
+	// catchh all handler that checks for configured endpoints
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == endpoint {
 			if r.Method != method {
@@ -153,7 +153,7 @@ func Start(server db.Server) error {
 	return nil
 }
 
-// parseHeaders parses a JSON or key-value string into a map
+// parseHeaders parses a JSON or key value string into a map
 func parseHeaders(headerStr string) map[string]string {
 	headers := make(map[string]string)
 	if strings.HasPrefix(headerStr, "{") {
