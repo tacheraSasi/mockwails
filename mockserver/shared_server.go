@@ -47,7 +47,6 @@ func (sm *SharedServerManager) GetOrCreateSharedServer(port int) (*http.ServeMux
 	}
 	sm.servers[port] = server
 
-	// Start the server in a goroutine
 	go func() {
 		log.Printf("Starting shared mock server on port %d", port)
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
@@ -63,7 +62,6 @@ func (sm *SharedServerManager) handleRequest(w http.ResponseWriter, r *http.Requ
 	endpoint := r.URL.Path
 	method := r.Method
 
-	// Get all active endpoints for this port
 	servers, err := db.GetAvailableEndpointsForPort(port)
 	if err != nil {
 		log.Printf("Error getting endpoints for port %d: %v", port, err)
@@ -81,14 +79,12 @@ func (sm *SharedServerManager) handleRequest(w http.ResponseWriter, r *http.Requ
 	}
 
 	if matchingServer == nil {
-		// Check if endpoint exists with different method
 		for _, server := range servers {
 			if server.Endpoint == endpoint {
 				serveMethodNotAllowed(w, r, endpoint, port, server.Method)
 				return
 			}
 		}
-		// No matching endpoint found
 		serveCustom404(w, r, endpoint, port)
 		return
 	}

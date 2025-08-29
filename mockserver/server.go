@@ -89,14 +89,13 @@ func serveMethodNotAllowed(w http.ResponseWriter, r *http.Request, endpoint stri
 func Start(server db.Server) error {
 	port := server.AddressAssigned.Port
 	
-	// Check if we're in unified mode
+	// Checks if we're in unified mode
 	isUnified, err := db.IsUnifiedMode()
 	if err != nil {
 		return fmt.Errorf("failed to check unified mode: %v", err)
 	}
 
 	if isUnified {
-		// Use shared server for unified mode
 		_, err := serverManager.GetOrCreateSharedServer(port)
 		if err != nil {
 			return fmt.Errorf("failed to get or create shared server: %v", err)
