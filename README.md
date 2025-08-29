@@ -358,13 +358,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **GitHub Issues**: [Report bugs or request features](https://github.com/tacheraSasi/mockwails/issues)
 - **Discussions**: [Join community discussions](https://github.com/tacheraSasi/mockwails/discussions)
-- **Email**: [tachera.sasi@example.com](mailto:tachera.sasi@example.com)
-- **Twitter**: [@tacheraSasi](https://twitter.com/tacheraSasi)
 
 ---
 
 <div align="center">
-  <strong>Built with ❤️ by <a href="https://github.com/tacheraSasi">tacheraSasi</a></strong>
+  <strong>Crafted by <a href="https://github.com/tacheraSasi">tacheraSasi</a></strong>
   <br>
   <sub>Making API mocking simple and powerful</sub>
 </div>
