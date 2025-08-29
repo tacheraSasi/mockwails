@@ -31,11 +31,11 @@ func (sm *SharedServerManager) GetOrCreateSharedServer(port int) (*http.ServeMux
 		return mux, nil
 	}
 
-	// Create new mux and server for this port
+	// mux and server for this port
 	mux := http.NewServeMux()
 	sm.muxes[port] = mux
 
-	// Create the main handler that routes to all active endpoints on this port
+	//  main handler that routes to all active endpoints on this port
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		sm.handleRequest(w, r, port)
 	})
@@ -103,18 +103,16 @@ func (sm *SharedServerManager) StopServer(port int) error {
 	sm.mutex.Lock()
 	defer sm.mutex.Unlock()
 
-	// Check if there are any active endpoints still using this port
 	servers, err := db.GetAvailableEndpointsForPort(port)
 	if err != nil {
 		return err
 	}
 
-	// If there are still active endpoints, don't stop the server
 	if len(servers) > 0 {
 		return nil
 	}
 
-	// Stop the server if it exists
+	// Stopping the server if it exists
 	if server, exists := sm.servers[port]; exists {
 		log.Printf("Stopping shared server on port %d", port)
 		server.Close()

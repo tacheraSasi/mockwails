@@ -42,7 +42,7 @@ func serveCustom404(w http.ResponseWriter, r *http.Request, endpoint string, por
 		AvailableEndpoints: availableEndpoints,
 	}
 
-	// We Serve JSON for non GET requests
+	// NOTE:We Serve JSON for non GET requests
 	if data.Method != http.MethodGet {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusNotFound)
@@ -104,21 +104,21 @@ func Start(server db.Server) error {
 		return nil
 	}
 
-	// Dedicated mode - use original logic
+	// Dedicated mode
 	endpoint := server.Endpoint
 	method := strings.ToUpper(server.Method)
 	responseStatus := server.ResponseStatus
 	responseHeaders := parseHeaders(server.ResponseHeaders)
 	responseBody := server.ResponseBody
 
-	// In dedicated mode, check if port is in use and not managed by us
+	// NOTE:In dedicated mode, check if port is in use and not managed by us
 	if utils.IsPortInUse(port) && !serverManager.IsPortManaged(port) {
 		return fmt.Errorf("port %d is already in use", port)
 	}
 
 	mux := http.NewServeMux()
 
-	// Create a catch-all handler that checks for configured endpoints
+	// catch-all handler that checks for configured endpoints
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == endpoint {
 			if r.Method != method {
@@ -126,13 +126,11 @@ func Start(server db.Server) error {
 				return
 			}
 
-			// Check if endpoint exists and is active
 			if exists, _ := db.CheckIfEndpointExists(endpoint, port); !exists {
 				serveCustom404(w, r, endpoint, port)
 				return
 			}
 
-			// This is our configured endpoint with correct method, handle it normally
 			for k, v := range responseHeaders {
 				w.Header().Set(k, v)
 			}
@@ -141,7 +139,6 @@ func Start(server db.Server) error {
 			return
 		}
 
-		// For any other path, we serve custom 404
 		serveCustom404(w, r, r.URL.Path, port)
 	})
 
