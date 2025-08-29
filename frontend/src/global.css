@@ -1,3 +1,16 @@
+/* Custom smooth spin animation for reload icon */
+.animate-spin-smooth {
+  animation: spin-smooth 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes spin-smooth {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 @import "tailwindcss";
 @import "tw-animate-css";
 
