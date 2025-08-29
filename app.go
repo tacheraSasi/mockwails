@@ -47,6 +47,7 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
+// shutdown is called when the app is shutting down
 func (a *App) shutdown(ctx context.Context) {
 	fmt.Println("App shutting down...")
 	servers, err := db.GetAllActiveServers()

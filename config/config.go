@@ -10,12 +10,24 @@ import (
 var (
 	once sync.Once
 )
+const (
+	AppVersion = "1.0.0"
+	AppName    = "MockWails"
+	AppID      = "com.tacheraSasi.mockwails"
+	Author     = "Tachera Sasi"
+)
 
 type Config struct {
 	ConfigPath string
 	DBPath     string
 	DebugMode  bool
 	OsType     string
+}
+
+type AppDetails struct {
+	Name    string
+	Version string
+	Author  string
 }
 
 func init() {
@@ -26,6 +38,14 @@ func init() {
 			fmt.Printf("Failed to create config directory: %v\n", err)
 		}
 	})
+}
+
+func GetAppDetails() *AppDetails {
+	return &AppDetails{
+		Name:    AppName,
+		Version: AppVersion,
+		Author:  Author,
+	}
 }
 
 func GetConfig() *Config {

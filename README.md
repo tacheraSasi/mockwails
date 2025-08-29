@@ -18,7 +18,7 @@
 
 ### Why MockWails?
 
-- **🚀 Fast & Lightweight**: Native desktop performance with minimal resource usage
+- **🚀 Fast & Lightweight**: Native desktop pericnoformance with minimal resource usage
 - **🎯 Developer-Friendly**: Intuitive interface designed by developers, for developers
 - **⚡ Instant Setup**: Create and deploy mock servers in seconds
 - **🔧 Highly Configurable**: Fine-tune every aspect of your mock responses
@@ -295,3 +295,76 @@ make lint
 # Build for production
 make build-mac
 ```
+
+## 📋 Use Cases
+
+### API Development & Testing
+- **Frontend Development**: Mock backend APIs before they're implemented
+- **API Design**: Prototype and test API responses during design phase
+- **Integration Testing**: Create predictable endpoints for automated testing
+- **Third-party API Simulation**: Mock external services for development
+
+### DevOps & CI/CD
+- **Build Pipelines**: Provide consistent mock services for automated tests
+- **Environment Testing**: Simulate different API responses and error conditions
+- **Load Testing**: Create lightweight mock endpoints for performance testing
+- **Staging Environments**: Replace expensive external dependencies
+
+### Education & Training
+- **API Learning**: Understand HTTP protocols and REST principles
+- **Workshop Demos**: Quick setup for coding workshops and tutorials
+- **Student Projects**: Provide APIs for learning frontend development
+- **Interview Preparation**: Practice API integration skills
+
+## 🤝 Contributing
+
+We welcome contributions! Here's how you can help:
+
+### Getting Started
+1. **Fork the repository** on GitHub
+2. **Clone your fork**: `git clone https://github.com/yourusername/mockwails.git`
+3. **Create a branch**: `git checkout -b feature/amazing-feature`
+4. **Make your changes** and test thoroughly
+5. **Commit your changes**: `git commit -m 'Add amazing feature'`
+6. **Push to the branch**: `git push origin feature/amazing-feature`
+7. **Open a Pull Request**
+
+### Development Guidelines
+- Follow existing code style and patterns
+- Write clear commit messages
+- Add tests for new features
+- Update documentation as needed
+- Run `make check` before submitting
+
+### Ways to Contribute
+- 🐛 **Bug Reports**: Found a bug? Open an issue with details
+- 💡 **Feature Requests**: Have an idea? We'd love to hear it
+- 📖 **Documentation**: Help improve our docs
+- 🧪 **Testing**: Add test cases and improve coverage
+- 🎨 **UI/UX**: Enhance the user interface and experience
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **[Wails Team](https://wails.io)** - For the amazing desktop app framework
+- **[Shadcn](https://ui.shadcn.com)** - For the beautiful UI component library
+- **[Go Community](https://golang.org)** - For the robust backend language
+- **[React Team](https://reactjs.org)** - For the powerful frontend framework
+
+## 📞 Support & Contact
+
+- **GitHub Issues**: [Report bugs or request features](https://github.com/tacheraSasi/mockwails/issues)
+- **Discussions**: [Join community discussions](https://github.com/tacheraSasi/mockwails/discussions)
+- **Email**: [tachera.sasi@example.com](mailto:tachera.sasi@example.com)
+- **Twitter**: [@tacheraSasi](https://twitter.com/tacheraSasi)
+
+---
+
+<div align="center">
+  <strong>Built with ❤️ by <a href="https://github.com/tacheraSasi">tacheraSasi</a></strong>
+  <br>
+  <sub>Making API mocking simple and powerful</sub>
+</div>
