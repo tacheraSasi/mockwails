@@ -92,7 +92,7 @@ const custom404HTML = `<!DOCTYPE html>
       <div class="endpoint">
         <div>
           <span class="badge {{.Method}}">{{.Method}}</span>
-          <code>{{.Endpoint}}</code>
+          <code><a href="http://localhost:{{$.Port}}{{.Endpoint}}" target="_blank">{{.Endpoint}}</a></code>
         </div>
         <div class="muted">{{.Name}}</div>
       </div>

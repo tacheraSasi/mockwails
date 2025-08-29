@@ -27,6 +27,7 @@ func serveCustom404(w http.ResponseWriter, r *http.Request, endpoint string, por
 	availableEndpoints, _ := db.GetAvailableEndpointsForPort(port)
 
 	tmpl, err := template.New("404").Parse(custom404HTML)
+	fmt.Println("Template parse error:", err)
 	if err != nil {
 		w.Header().Set("Content-Type", "text/plain")
 		w.WriteHeader(http.StatusNotFound)
