@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import ReloadIcon from "@/components/reload-icon";
 
 const mockRequests = [
   {
@@ -49,7 +50,11 @@ const RequestInspector = () => {
     <div className="flex h-[calc(100vh-4rem)] p-4 gap-4">
       {/* Left Pane: Request List */}
       <div className="w-1/3 border rounded-lg p-2 overflow-y-auto bg-card">
-        <h2 className="text-lg font-semibold p-2">Requests</h2>
+        <div className="flex p-2 justify-between">
+          <span className="flex text-lg font-semibold">Requests</span>
+          <span className="flex"><ReloadIcon /></span>
+        </div>
+
         <ul className="space-y-1">
           {mockRequests.map((req) => (
             <li key={req.id}>
