@@ -1,7 +1,8 @@
 package build
 
-import "embed"
+// import "embed"
 
 
-//go:embed darwin/*
-var DarwinBuildItems embed.FS
+// //go:embed bin/*
+// var DarwinBuildItems embed.FS
+
