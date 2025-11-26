@@ -4,6 +4,7 @@ import (
 	"log"
 	"sync"
 
+	"github.com/tacheraSasi/mockwails/config"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -16,7 +17,8 @@ var (
 func GetDB() *gorm.DB {
 	once.Do(func() {
 		var err error
-		db, err = gorm.Open(sqlite.Open("./mockwails.db"), &gorm.Config{})
+		DBPath := config.GetConfig().DBPath
+		db, err = gorm.Open(sqlite.Open(DBPath), &gorm.Config{})
 		if err != nil {
 			log.Fatalf("failed to connect database: %v", err)
 		}
